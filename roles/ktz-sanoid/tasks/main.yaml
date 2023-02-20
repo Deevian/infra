@@ -13,11 +13,6 @@
     state: present
   ignore_errors: True
 
-- name: replication setup
-  include: replication.yaml
-  tags:
-    - replication
-
 - name: Give user passwordless access to ZFS commands
   lineinfile:
     path: /etc/sudoers

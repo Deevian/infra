@@ -8,14 +8,13 @@
 # List of users
 users:
 {% for u in authelia_users %}
-  {{ u.username }}:
-    displayname: {{ u.displayname }}
-    password: {{ u.password }}
-    email: {{ u.email }}
-    groups:
-  {% for g in u.groups %}
-      - {{ g }}
-  {% endfor %}
+{{ ''|indent(width=2,first=true) }}{{ u.username }}:
+{{ 'displayname: '|indent(width=4,first=true) }}{{ u.displayname }}
+{{ 'password: '|indent(width=4,first=true) }}{{ u.password }}
+{{ 'email: '|indent(width=4,first=true) }}{{ u.email }}
+{{ 'groups:'|indent(width=4,first=true) }}
+{% for g in u.groups %}
+{{ '- '|indent(width=6,first=true) }}{{ g }}
 {% endfor %}
-
+{% endfor %}
 ...

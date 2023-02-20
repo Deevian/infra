@@ -65,26 +65,3 @@
     owner: root
     group: root
     mode: '0644'
-
-# todo: fix me - the stuff below is borrowed from orangeone
-# - name: Install systemd services
-#   file:
-#     src: /opt/sanoid/packages/debian/{{ item }}
-#     dest: /lib/systemd/system/{{ item }}
-#     state: link
-#   loop: "{{ sanoid_services }}"
-#   become: true
-
-# - name: Enable systemd services
-#   systemd:
-#     name: "{{ item }}"
-#     enabled: true
-#     masked: false
-#   loop: "{{ sanoid_services }}"
-#   become: true
-
-# - name: Start sanoid timer
-#   systemd:
-#     name: sanoid.timer
-#     state: started
-#   become: true

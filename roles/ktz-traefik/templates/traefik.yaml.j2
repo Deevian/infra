@@ -12,12 +12,8 @@ entryPoints:
       tls:
         certresolver: cloudflare
         domains:
-          - main: {{ domain_me }}
-            sans: "*.{{ domain_me }}"
-          - main: wd.{{ domain_me }}
-            sans: "*.wd.{{ domain_me }}"
-          - main: m.wd.{{ domain_me }}
-            sans: "*.m.wd.{{ domain_me }}"
+          - main: {{ domain }}
+            sans: "*.{{ domain }}"
   traefik:
     address: ":8080"
     

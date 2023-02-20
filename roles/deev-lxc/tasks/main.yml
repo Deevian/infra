@@ -1,0 +1,23 @@
+---
+
+- name: ensure hostname is set correctly
+  hostname:
+    name: "{{ hostname_proxmox }}"
+
+- name: install required packages
+  ansible.builtin.pip:
+    name:
+      - proxmoxer
+      - requests
+
+- name: manage lounge lxc
+  include_tasks: lxc.yml
+  loop: ["{{ lxc_lounge }}"]
+  tags:
+    - lounge
+
+- name: manage sharedom lxc
+  include_tasks: lxc.yml
+  loop: ["{{ lxc_sharedom }}"]
+  tags:
+    - sharedom

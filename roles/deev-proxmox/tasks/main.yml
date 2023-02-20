@@ -1,0 +1,10 @@
+---
+
+- name: ensure hostname is set correctly
+  hostname:
+    name: "{{ hostname_proxmox }}"
+
+- name: disks
+  include_tasks: disks.yml
+  tags:
+    - disks

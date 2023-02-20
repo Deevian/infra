@@ -12,9 +12,9 @@
     X-Content-Type-Options "nosniff"
     X-Robots-Tag noindex, nofollow
     Referrer-Policy "same-origin"
-    Content-Security-Policy "frame-ancestors {{ domain_me }} *.{{ domain_wd_me }}"
+    Content-Security-Policy "frame-ancestors {{ domain }} *.{{ domain_wd_me }}"
     -Server
-    Permissions-Policy "geolocation=(self {{ domain_me }} *.{{ domain_wd_me }}), microphone=()"
+    Permissions-Policy "geolocation=(self {{ domain }} *.{{ domain_wd_me }}), microphone=()"
   }
 }
 

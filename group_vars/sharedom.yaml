@@ -1,0 +1,27 @@
+---
+
+target_os: ubuntu
+hostname_proxmox: sharedom
+main_username: root
+
+samba_users:
+  - name: root
+    password: atemanhameuamigojacare
+
+samba_shares:
+  - name: storage
+    browseable: true
+    path: /mnt/storage
+    write_list: root
+    valid_users: root
+    owner: root
+    group: root
+    read_only: no
+  - name: downloads
+    browseable: true
+    path: /mnt/downloads
+    write_list: root
+    valid_users: root
+    owner: root
+    group: root
+    read_only: no

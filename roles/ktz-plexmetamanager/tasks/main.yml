@@ -4,8 +4,8 @@
   file:
     dest: "{{ appdata_path }}/plexmeta/config"
     state: directory
-    owner: "{{ main_uid }}"
-    group: "{{ main_gid }}"
+    owner: "root"
+    group: "root"
   become: true
 
 - name: template plexmeta rules
@@ -20,5 +20,5 @@
   copy:
     src: movies.yml
     dest: "{{ appdata_path }}/plexmeta/config/movies.yml"
-    owner: "{{ main_uid }}"
-    group: "{{ main_gid }}"
+    owner: "root"
+    group: "root"

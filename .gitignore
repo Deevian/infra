@@ -113,3 +113,5 @@ vault.yaml
 .editorconfig
 
 credentials.auto.tfvars
+
+.idea

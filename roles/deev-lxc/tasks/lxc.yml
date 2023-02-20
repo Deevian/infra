@@ -1,0 +1,60 @@
+---
+
+- name: create lxc container
+  community.general.proxmox:
+    node: "proxmox"
+    hostname: "{{ item.hostname }}"
+    vmid: "{{ item.vmid }}"
+    ostemplate: "{{ lxc_os_template }}"
+    api_user: "{{ lxc_host_user }}"
+    api_password: "{{ lxc_host_password }}"
+    api_host: "{{ lxc_host }}"
+    password: "{{ lxc_password }}"
+    pubkey: "{{ ssh_pubkey }}"
+    storage: "local-zfs"
+    disk: "{{ item.diskGB }}"
+    netif: '{"net0":"name=eth0,bridge=vmbr0,hwaddr={{ item.hwaddr }},ip={{ item.ip }},gw={{ lxc_network_gateway }},type=veth"}'
+    mounts: "{{ item.mounts }}"
+    features: "nesting=1,mount=nfs"
+    unprivileged: "{{ item.unprivileged }}"
+    state: present
+    force: true
+    onboot: true
+    memory: 100000
+    cores: 8192
+    cpus: 8192
+  tags:
+    - create
+
+- name: start lxc container
+  community.general.proxmox:
+    vmid: "{{ item.vmid }}"
+    api_user: "{{ lxc_host_user }}"
+    api_password: "{{ lxc_host_password }}"
+    api_host: "{{ lxc_host }}"
+    state: started
+    timeout: 90
+  tags:
+    - start
+
+- name: stop lxc container
+  community.general.proxmox:
+    vmid: "{{ item.vmid }}"
+    api_user: "{{ lxc_host_user }}"
+    api_password: "{{ lxc_host_password }}"
+    api_host: "{{ lxc_host }}"
+    state: stopped
+    force: true
+  tags:
+    - stop
+
+- name: destroy lxc container
+  community.general.proxmox:
+    vmid: "{{ item.vmid }}"
+    api_user: "{{ lxc_host_user }}"
+    api_password: "{{ lxc_host_password }}"
+    api_host: "{{ lxc_host }}"
+    state: absent
+    force: true
+  tags:
+    - destroy
