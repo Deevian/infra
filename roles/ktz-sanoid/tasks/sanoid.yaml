@@ -59,7 +59,6 @@
 
 - name: configure sanoid
   copy:
-    #src: sanoid/sanoid.conf
     src: "sanoid/{{ sanoid_config_source }}"
     dest: /etc/sanoid/sanoid.conf
     owner: root

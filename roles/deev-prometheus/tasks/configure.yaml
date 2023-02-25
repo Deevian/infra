@@ -1,0 +1,18 @@
+---
+
+- name: install prometheus-pve-exporter service file
+  template:
+    src: templates/prometheus-pve-exporter.service.j2
+    dest: "/etc/systemd/system/prometheus-pve-exporter.service"
+
+- name: template and install pve config
+  template:
+    src: templates/pve.j2
+    dest: "/etc/prometheus/pve.yml"
+
+- name: enable prometheus-pve-exporter service
+  ansible.builtin.systemd:
+    name: prometheus-pve-exporter
+    enabled: yes
+    state: reloaded
+    daemon_reload: yes

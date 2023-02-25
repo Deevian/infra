@@ -1,14 +1,19 @@
 ---
 
 - name: download latest release
-  get_url:                                                           
-    url: "{{ caddy_amd64_linux_cloudflare_binary_url }}"                       
+  get_url:
+    url: "{{ caddy_amd64_linux_cloudflare_binary_url }}"
     dest: /usr/local/bin/caddy
-    owner: root
-    group: root
     mode: a+x
 
-- name: Add the caddy user
-  ansible.builtin.user:
-    name: caddy
-    group: caddy
+- name: create caddy config folder
+  ansible.builtin.file:
+    path: "{{ caddy_data_path }}/caddy"
+    state: directory
+    mode: '0755'
+
+- name: create caddy logs folder
+  ansible.builtin.file:
+    path: "{{ caddy_log_path }}"
+    state: directory
+    mode: '0755'

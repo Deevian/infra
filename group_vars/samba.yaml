@@ -1,0 +1,41 @@
+---
+
+hostname_samba: samba
+
+samba_users:
+  - name: root
+    password: "{{ samba_password }}"
+
+samba_shares:
+  - name: media
+    browseable: true
+    path: /mnt/media
+    write_list: "{{ main_username }}"
+    valid_users: "{{ main_username }}"
+    owner: "{{ main_username }}"
+    group: "{{ main_username }}"
+    read_only: no
+  - name: data
+    browseable: true
+    path: /mnt/data
+    write_list: "{{ main_username }}"
+    valid_users: "{{ main_username }}"
+    owner: "{{ main_username }}"
+    group: "{{ main_username }}"
+    read_only: no
+  - name: downloads
+    browseable: true
+    path: /mnt/downloads
+    write_list: "{{ main_username }}"
+    valid_users: "{{ main_username }}"
+    owner: "{{ main_username }}"
+    group: "{{ main_username }}"
+    read_only: no
+  - name: appdata
+    browseable: true
+    path: /mnt/appdata
+    write_list: "{{ main_username }}"
+    valid_users: "{{ main_username }}"
+    owner: "{{ main_username }}"
+    group: "{{ main_username }}"
+    read_only: no

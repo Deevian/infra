@@ -1,0 +1,33 @@
+---
+
+- name: ensure hostname is set correctly
+  hostname:
+    name: "{{ hostname_proxmox }}"
+
+- name: disks
+  include_tasks: disks.yaml
+  tags:
+    - disks
+
+- name: ensure group "render" has correct gid
+  ansible.builtin.group:
+    name: render
+    state: present
+    gid: "{{ render_gid }}"
+
+- name: ensure render file has correct group
+  command: "chown -R root:render /dev/dri/renderD128"
+
+- name: add group "lxc" exists with correct gid
+  ansible.builtin.group:
+    name: lxc
+    state: present
+    gid: "{{ main_lxc_gid }}"
+
+- name: add user 'lxc' exists with the correct uid
+  ansible.builtin.user:
+    name: lxc
+    uid: "{{ main_lxc_uid }}"
+    shell: /usr/sbin/nologin
+    create_home: false
+    group: render

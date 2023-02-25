@@ -1,38 +1,47 @@
 ---
+
   - hosts: proxmox
     vars_files:
       - 'vars/vault.yaml'
     roles:
-      - role: grog.package
+      - role: deev-pkg
+      - role: ironicbadger.figurine
       - role: ironicbadger.hddtemp
       - role: ironicbadger.proxmox_nag_removal
       - role: ironicbadger.bash_aliases
-      - role: ironicbadger.figurine
-      - role: ktz-sanoid
       - role: deev-proxmox
+      - role: ktz-sanoid
       - role: ironicbadger.snapraid
-      - role: deev-lxc
-        tags:
-          - provisioning
-  - hosts: sharedom
+
+  - hosts: caddy
     vars_files:
       - 'vars/vault.yaml'
     roles:
+      - role: deev-pkg
+      - role: ktz-caddy
+
+  - hosts: samba
+    vars_files:
+      - 'vars/vault.yaml'
+    roles:
+      - role: deev-pkg
       - role: vladgh.samba.server
 
-  - hosts: lounge
+  - hosts: plex
     vars_files:
       - 'vars/vault.yaml'
     roles:
+      - role: deev-pkg
       - role: geerlingguy.docker
-      - role: grog.package
-      - role: ironicbadger.bash_aliases
-      - role: ironicbadger.figurine
-      - role: ktz-authelia
-        tags: compose
       - role: ironicbadger.docker_compose_generator
-        tags: compose
-      - role: ktz-traefik
-        tags: compose
-#      - role: ktz-plexmetamanager
-#        tags: compose
+    tasks:
+      - name: start docker compose
+        command: "docker-compose up -d"
+
+  - hosts: prometheus
+    vars_files:
+      - 'vars/vault.yaml'
+    roles:
+      - role: deev-pkg
+      - role: cloudalchemy.prometheus
+      - role: deev-prometheus

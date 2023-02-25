@@ -1,0 +1,4 @@
+---
+
+hostname_caddy: caddy
+caddy_data_path: /mnt/appdata

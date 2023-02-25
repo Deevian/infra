@@ -1,0 +1,9 @@
+---
+
+- name: manage lxc
+  include_tasks: lxc.yaml
+  loop: "{{ lxc_list | dict2items }}"
+  when:
+    - (ansible_run_tags == ['all'] and ansible_skip_tags == []) or (item.key in ansible_run_tags) or (item.key not in ansible_skip_tags and (item.key in ansible_run_tags or ansible_run_tags == ['all']))
+  tags:
+    - always

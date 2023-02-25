@@ -1,0 +1,70 @@
+---
+
+target_os: debian
+hostname_proxmox: proxmox
+main_username: root
+
+## deev-pkg
+package_list:
+  - curl
+  - wget
+  - dnsutils
+  - hddtemp
+  - htop
+  - iftop
+  - iotop
+  - intel-gpu-tools
+  - lm-sensors
+  - net-tools
+  - screen
+  - smartmontools
+  - wget
+  - xfsprogs
+  - zfsutils-linux
+  - mergerfs
+  - snapraid
+
+## snapraid
+snapraid_config_excludes:
+  - "*.unrecoverable"
+  - "/tmp/"
+  - "/lost+found/"
+  - "downloads/"
+  - "appdata/"
+  - "/mnt/disk7/umbrel/"
+  - "*.!sync"
+  - ".AppleDouble"
+  - "._AppleDouble"
+  - ".DS_Store"
+  - "._.DS_Store"
+  - ".Thumbs.db"
+  - ".fseventsd"
+  - ".Spotlight-V100"
+  - ".TemporaryItems"
+  - ".Trashes"
+  - ".AppleDB"
+  - ".nfo"
+
+## ktz-sanoid
+sanoid_build_from_source: true
+sanoid_config_source: sanoid-proxmox.conf
+
+# deev-proxmox
+proxmox_main_storage_path: 
+extra_mountpoints:
+  - { path: "/mnt/storage" }
+
+# ironicbadger.snapraid
+snapraid_runner: false
+snapraid_parity_disks:
+  - { path: /mnt/parity-disks/disk-1, diskbyid: /dev/disk/by-id/ata-ST18000NM000J-2TV103_ZR5DTXYF-part1, fs: xfs, opts: defaults, content: true }
+
+snapraid_data_disks:
+  - { path: /mnt/media-disks/disk-1, diskbyid: /dev/disk/by-id/ata-ST18000NM000J-2TV103_ZR5DTKW5-part1, fs: xfs, opts: defaults, content: true }
+  - { path: /mnt/media-disks/disk-2, diskbyid: /dev/disk/by-id/ata-ST18000NM000J-2TV103_WR509RRY-part1, fs: xfs, opts: defaults, content: true }
+
+fstab_mergerfs:
+  - { source: "/mnt/media-disks/*:/mnt/data", mountpoint: "/mnt/storage", fs: fuse.mergerfs, opts: "defaults,nonempty,allow_other,use_ino,moveonenospc=true,category.create=epmfs,dropcacheonclose=true,minfreespace=250G,fsname=mergerfs" }
+  - { source: "/mnt/media-disks/*", mountpoint: "/mnt/media", fs: fuse.mergerfs, opts: "defaults,nonempty,allow_other,use_ino,moveonenospc=true,category.create=mspmfs,dropcacheonclose=true,minfreespace=250G,fsname=jbod" }
+
+snapraid_sync_healthcheck_io_uuid: "{{ snapraid_healthcheck_secret }}"

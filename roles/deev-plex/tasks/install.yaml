@@ -1,0 +1,38 @@
+---
+
+- name: add the plex group
+  ansible.builtin.group:
+    name: plex
+    system: true
+    state: present
+    gid: "{{ render_lxc_gid }}"
+
+- name: add the plex user
+  ansible.builtin.user:
+    name: plex
+    groups: "plex, root"
+    system: true
+    create_home: true
+    home: /var/lib/plexmediaserver
+    shell: /usr/sbin/nologin
+    state: present
+
+- name: ensure user has access to home
+  command: "chown -R plex:root /var/lib/plexmediaserver"
+
+- name: add plex repo key
+  apt_key:
+    url: "https://downloads.plex.tv/plex-keys/PlexSign.key"
+    state: present
+
+- name: add plex repository
+  apt_repository:
+    repo: "deb https://downloads.plex.tv/repo/deb public main"
+    state: present
+    filename: plexmediaserver
+    update_cache: yes
+
+- name: install plex
+  apt:
+    name: plexmediaserver
+    state: present

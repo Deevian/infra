@@ -1,4 +1,5 @@
 ---
+
   - hosts: proxmox
     vars_files:
       - 'vars/vault.yaml'

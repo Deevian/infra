@@ -1,32 +1,33 @@
 proxmox:
 	ansible-playbook -b run.yaml --limit proxmox
 
-sharedom:
-	ansible-playbook -b run.yaml --limit sharedom
+caddy:
+	ansible-playbook -b run-lxc.yaml --limit proxmox --tags caddy
+	ansible-playbook -b run.yaml --limit caddy
 
-lounge:
-	ansible-playbook -b run.yaml --limit lounge
+samba:
+	ansible-playbook -b run-lxc.yaml --limit proxmox --tags samba
+	ansible-playbook -b run.yaml --limit samba
 
-# Lounge LXC
-lounge-create:
-	ansible-playbook -b run-lxc.yaml --limit proxmox --tags "lounge,create,start"
-lounge-start:
-	ansible-playbook -b run-lxc.yaml --limit proxmox --tags "lounge,start"
-lounge-stop:
-	ansible-playbook -b run-lxc.yaml --limit proxmox --tags "lounge,stop"
-lounge-destroy:
-	ansible-playbook -b run-lxc.yaml --limit proxmox --tags "lounge,stop,destroy"
+plex:
+	ansible-playbook -b run-lxc.yaml --limit proxmox --tags plex
+	ansible-playbook -b run.yaml --limit plex
 
-# Sharedom LXC
-sharedom-create:
-	ansible-playbook -b run-lxc.yaml --limit proxmox --tags "sharedom,create,start"
-sharedom-start:
-	ansible-playbook -b run-lxc.yaml --limit proxmox --tags "sharedom,start"
-sharedom-stop:
-	ansible-playbook -b run-lxc.yaml --limit proxmox --tags "sharedom,stop"
-sharedom-destroy:
-	ansible-playbook -b run-lxc.yaml --limit proxmox --tags "sharedom,stop,destroy"
+prometheus:
+	ansible-playbook -b run-lxc.yaml --limit proxmox --tags prometheus
+	ansible-playbook -b run.yaml --limit prometheus
 
+## Generic LXC commands
+lxc-create:
+	ansible-playbook -b run-lxc.yaml --limit proxmox --tags "$(host),create" --skip-tags "start,stop,destroy"
+lxc-start:
+	ansible-playbook -b run-lxc.yaml --limit proxmox --tags "$(host),start" --skip-tags "create,stop,destroy"
+lxc-stop:
+	ansible-playbook -b run-lxc.yaml --limit proxmox --tags "$(host),stop" --skip-tags "create,start,destroy"
+lxc-destroy:
+	ansible-playbook -b run-lxc.yaml --limit proxmox --tags "$(host),destroy" --skip-tags "create,start,stop"
+
+## Misc commands
 reqs:
 	ansible-galaxy install -r requirements.yaml
 	ansible-galaxy collection install -r requirements-collections.yaml

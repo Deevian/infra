@@ -1,0 +1,79 @@
+---
+
+- name: stop lxc container
+  community.general.proxmox:
+    vmid: "{{ item.value.vmid }}"
+    api_user: "{{ lxc_api_user }}"
+    api_password: "{{ lxc_api_password }}"
+    api_host: "{{ lxc_api_host }}"
+    state: stopped
+    force: true
+  ignore_errors: true
+  tags:
+    - "{{ item.key }}"
+    - stop
+
+- name: destroy lxc container
+  community.general.proxmox:
+    vmid: "{{ item.value.vmid }}"
+    api_user: "{{ lxc_api_user }}"
+    api_password: "{{ lxc_api_password }}"
+    api_host: "{{ lxc_api_host }}"
+    state: absent
+    force: true
+  ignore_errors: true
+  tags:
+    - "{{ item.key }}"
+    - destroy
+
+- name: create lxc container
+  community.general.proxmox:
+    node: "{{ lxc_api_node }}"
+    api_user: "{{ lxc_api_user }}"
+    api_password: "{{ lxc_api_password }}"
+    api_host: "{{ lxc_api_host }}"
+    hostname: "{{ item.value.hostname }}"
+    vmid: "{{ item.value.vmid }}"
+    ostemplate: "{{ item.value.os_template | default(lxc_default_os_template) }}"
+    password: "{{ item.value.password | default(lxc_default_password) }}"
+    pubkey: "{{ ssh_pubkey }}"
+    storage: "{{ item.value.storage | default(lxc_default_storage) }}"
+    disk: "{{ item.value.diskGB }}"
+    netif: '{"net0":"name=eth0,bridge=vmbr0,type=veth,hwaddr={{ item.value.hwaddr }},ip={{ item.value.ip }},gw={{ item.value.network_gateway | default(lxc_default_network_gateway) }}"}'
+    mounts: "{{ item.value.mounts | default(lxc_default_mounts) }}"
+    features: "{{ item.value.features | default(lxc_default_features) }}"
+    nameserver: "{{ item.value.nameserver | default(lxc_default_nameserver) }}"
+    unprivileged: "{{ item.value.unprivileged }}"
+    state: present
+    force: true
+    onboot: true
+    memory: "{{ item.value.memory | default(lxc_default_memory) }}"
+    cores: "{{ item.value.cres | default(lxc_default_cores) }}"
+  tags:
+    - "{{ item.key }}"
+    - create
+
+- name: add extra configs to lxc container
+  lineinfile:
+    dest: "/etc/pve/lxc/{{ item.value.vmid }}.conf"
+    line: "{{ line }}"
+    insertafter: EOF
+  with_items: "{{ item.value.extra_config }}"
+  loop_control:
+    loop_var: line
+  when: item.value.extra_config is defined
+  tags:
+    - "{{ item.key }}"
+    - create
+
+- name: start lxc container
+  community.general.proxmox:
+    vmid: "{{ item.value.vmid }}"
+    api_user: "{{ lxc_api_user }}"
+    api_password: "{{ lxc_api_password }}"
+    api_host: "{{ lxc_api_host }}"
+    state: started
+    timeout: 90
+  tags:
+    - "{{ item.key }}"
+    - start

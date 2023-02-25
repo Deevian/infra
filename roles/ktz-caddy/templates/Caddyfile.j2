@@ -1,102 +1,22 @@
-(cloudflare) {
-  tls {
-    dns cloudflare {{ opnsense_caddy_cloudflare_api_token }}
-  }
-}
-
-(headers) {
-  header {
-    Permissions-Policy interest-cohort=()
-    Strict-Transport-Security "max-age=31536000; includeSubdomains"
-    X-XSS-Protection "1; mode=block"
-    X-Content-Type-Options "nosniff"
-    X-Robots-Tag noindex, nofollow
-    Referrer-Policy "same-origin"
-    Content-Security-Policy "frame-ancestors {{ domain }} *.{{ domain_wd_me }}"
-    -Server
-    Permissions-Policy "geolocation=(self {{ domain }} *.{{ domain_wd_me }}), microphone=()"
-  }
-}
-
-## core
-
-# c137
-c137.{{ domain_wd_me }} {
-  reverse_proxy https://10.42.0.1:8006 {
-    transport http {
-      tls_insecure_skip_verify
+{
+    email {{ gmail_address }}
+    log {
+        output file /var/log/caddy/default.access.log
     }
-  }
-  import cloudflare
 }
 
-# pihole
-dns.{{ domain_wd_me }} {
-  redir / /admin
-  reverse_proxy http://10.42.0.253
-  import cloudflare
-}
-
-# dhcp
-dhcp.{{ domain_wd_me }} {
-  redir / /dhcp.leases
-  reverse_proxy http://10.42.0.253:81
-  import cloudflare
-}
-
-#opnsense
-opnsense.{{ domain_wd_me }} {
-  reverse_proxy https://10.42.0.254:443 {
-    transport http {
-      tls_insecure_skip_verify
+overseerr.{{ domain_old }}, overseerr.{{ domain }} {
+    log {
+        output file /var/log/caddy/overseerr.access.log
     }
-  }
-  import cloudflare
+
+    reverse_proxy {{ infra_hosts.desktop }}:5055
 }
 
-## proxmox
-# px morpheus
-px.{{ domain_wd_me }} {
-  reverse_proxy https://10.42.1.10:8006 {
-    transport http {
-      tls_insecure_skip_verify
+plex.{{ domain_old }}, {{ domain }} {
+    log {
+        output file /var/log/caddy/plex.access.log
     }
-  }
-  import cloudflare
-}
 
-# px morpheus
-px.m.{{ domain_wd_me }} {
-  reverse_proxy https://10.42.1.10:8006 {
-    transport http {
-      tls_insecure_skip_verify
-    }
-  }
-  import cloudflare
-}
-
-# anton
-px.anton.{{ domain_wd_me }} {
-  reverse_proxy https://10.42.1.20:8006 {
-    transport http {
-      tls_insecure_skip_verify
-    }
-  }
-  import cloudflare
-}
-
-# blue iris
-bi.{{ domain_wd_me }} {
-  reverse_proxy http://10.42.2.1:83
-  import cloudflare
-}
-
-# octoprint
-bricktop.{{ domain_wd_me }} {
-  reverse_proxy https://10.42.1.80:443 {
-    transport http {
-      tls_insecure_skip_verify
-    }
-  }
-  import cloudflare
+    reverse_proxy {{ infra_hosts.plex }}:32400
 }

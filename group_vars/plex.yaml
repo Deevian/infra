@@ -1,0 +1,25 @@
+---
+
+hostname_plex: plex
+
+appdata_path: /mnt/appdata
+media_path: /mnt/media
+downloads_path: /mnt/downloads
+
+docker_compose_version: 1.29.2
+
+containers:
+  - service_name: plex
+    active: true
+    image: lscr.io/linuxserver/plex:latest
+    network_mode: host
+    devices:
+      - /dev/dri:/dev/dri
+    volumes:
+      - "{{ appdata_path }}/plex/config:/config"
+      - "{{ media_path }}:/mnt/media"
+    restart: unless-stopped
+    environment:
+      - "TZ=Europe/Lisbon"
+      - "PUID=1000"
+      - "PGID={{ render_lxc_gid }}"

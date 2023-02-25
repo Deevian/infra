@@ -1,5 +1,9 @@
 ---
 
+- name: ensure hostname is set correctly
+  hostname:
+    name: "{{ hostname_caddy }}"
+
 - name: install caddy
   include_tasks:
     file: install.yaml

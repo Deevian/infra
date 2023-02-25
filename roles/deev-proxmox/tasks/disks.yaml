@@ -4,8 +4,8 @@
   file:
     dest: "{{ item.path }}"
     state: directory
-    owner: nobody
-    group: nogroup
+    owner: "{{ main_lxc_uid }}"
+    group: "{{ main_lxc_gid }}"
     mode: 0777
   with_items:
     - "{{ snapraid_parity_disks }}"
@@ -32,7 +32,6 @@
     src: "{{ item.source }}"
     opts: "{{ item.opts }}"
     fstype: "{{ item.fs }}"
-    # change to 'mounted' to auto mount
     state: present
   with_items:
     - "{{ fstab_mergerfs }}"

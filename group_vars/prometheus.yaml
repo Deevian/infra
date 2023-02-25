@@ -1,0 +1,36 @@
+---
+
+hostname_prometheus: prometheus
+
+#cloudalchemy.prometheus
+prometheus_scrape_configs:
+  - job_name: 'pve'
+    static_configs:
+      - targets:
+          - "{{ infra_hosts.proxmox }}"
+    metrics_path: /pve
+    params:
+      module: [default]
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 127.0.0.1:9221  # PVE exporter
+prometheus_remote_write:
+  - url: https://prometheus-prod-01-eu-west-0.grafana.net/api/prom/push
+    basic_auth:
+      username: "{{ prometheus_grafana_user_id }}"
+      password: "{{ prometheus_grafana_api_key }}"
+
+# deev-prometheus
+pve_prometheus_user: "pve-exporter@pve"
+
+# deev-pkg
+package_list:
+  - virtualenv
+  - python3
+  - python3-pip
+  - python3-venv
+  - python3-setuptools
