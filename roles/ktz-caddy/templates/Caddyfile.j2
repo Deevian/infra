@@ -56,3 +56,18 @@ radarr.h.{{ domain_old }} {
 
     reverse_proxy {{ infra_hosts.plex }}:7878
 }
+
+proxmox.h.{{ domain_old }} {
+    @blocked not remote_ip 192.168.0.0/16
+    respond @blocked "Access Denied" 403
+
+    log {
+        output file /var/log/caddy/proxmox.access.log
+    }
+
+    reverse_proxy https://{{ infra_hosts.proxmox }}:8006 {
+        transport http {
+                tls_insecure_skip_verify
+        }
+    }
+}

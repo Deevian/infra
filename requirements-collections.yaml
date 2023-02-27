@@ -2,3 +2,4 @@
 
 collections:
   - name: vladgh.samba
+  - name: community.general
