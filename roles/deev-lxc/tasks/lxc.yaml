@@ -7,7 +7,6 @@
     api_password: "{{ lxc_api_password }}"
     api_host: "{{ lxc_api_host }}"
     state: stopped
-    force: true
   ignore_errors: true
   tags:
     - "{{ item.key }}"
@@ -20,7 +19,6 @@
     api_password: "{{ lxc_api_password }}"
     api_host: "{{ lxc_api_host }}"
     state: absent
-    force: true
   ignore_errors: true
   tags:
     - "{{ item.key }}"
@@ -45,7 +43,6 @@
     nameserver: "{{ item.value.nameserver | default(lxc_default_nameserver) }}"
     unprivileged: "{{ item.value.unprivileged }}"
     state: present
-    force: true
     onboot: true
     memory: "{{ item.value.memory | default(lxc_default_memory) }}"
     cores: "{{ item.value.cres | default(lxc_default_cores) }}"

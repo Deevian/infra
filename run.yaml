@@ -8,7 +8,6 @@
       - role: ironicbadger.figurine
       - role: ironicbadger.hddtemp
       - role: ironicbadger.proxmox_nag_removal
-      - role: ironicbadger.bash_aliases
       - role: deev-proxmox
       - role: ktz-sanoid
       - role: ironicbadger.snapraid
@@ -27,16 +26,21 @@
       - role: deev-pkg
       - role: vladgh.samba.server
 
+  - hosts: tailscale
+    vars_files:
+      - 'vars/vault.yaml'
+    roles:
+      - role: deev-pkg
+      - role: deev-tailscale
+
   - hosts: plex
     vars_files:
       - 'vars/vault.yaml'
     roles:
       - role: deev-pkg
       - role: geerlingguy.docker
-      - role: ironicbadger.docker_compose_generator
-    tasks:
-      - name: start docker compose
-        command: "docker-compose up -d"
+      - role: deev-docker-compose
+        tags: compose
 
   - hosts: prometheus
     vars_files:

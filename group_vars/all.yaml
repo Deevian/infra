@@ -24,6 +24,7 @@ infra_hosts:
   proxmox: "192.168.1.65"
   caddy: "192.168.1.66"
   samba: "192.168.1.67"
+  tailscale: "192.168.1.68"
   plex: "192.168.1.69"
   prometheus: "192.168.1.70"
 

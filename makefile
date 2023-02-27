@@ -1,9 +1,16 @@
 proxmox:
 	ansible-playbook -b run.yaml --limit proxmox
 
+tailscale:
+	ansible-playbook -b run-lxc.yaml --limit proxmox --tags tailscale
+	ansible-playbook -b run.yaml --limit tailscale
+
 caddy:
 	ansible-playbook -b run-lxc.yaml --limit proxmox --tags caddy
 	ansible-playbook -b run.yaml --limit caddy
+
+caddy-config:
+	ansible-playbook -b run.yaml --limit caddy --tags config
 
 samba:
 	ansible-playbook -b run-lxc.yaml --limit proxmox --tags samba
@@ -12,6 +19,9 @@ samba:
 plex:
 	ansible-playbook -b run-lxc.yaml --limit proxmox --tags plex
 	ansible-playbook -b run.yaml --limit plex
+
+plex-compose:
+	ansible-playbook -b run.yaml --limit plex --tags compose
 
 prometheus:
 	ansible-playbook -b run-lxc.yaml --limit proxmox --tags prometheus

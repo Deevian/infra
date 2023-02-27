@@ -1,0 +1,23 @@
+---
+
+- name: ensure hostname is set correctly
+  hostname:
+    name: "{{ hostname_tailscale }}"
+
+- name: update config to enable port forwarding (pt1)
+  ansible.builtin.shell:
+    cmd: "echo 'net.ipv4.ip_forward = 1' | tee -a /etc/sysctl.d/99-tailscale.conf"
+
+- name: update config to enable port forwarding (pt2)
+  ansible.builtin.shell:
+    cmd: "echo 'net.ipv6.conf.all.forwarding = 1' | tee -a /etc/sysctl.d/99-tailscale.conf"
+
+- name: reload sysctl
+  ansible.builtin.shell:
+    cmd: "sysctl -p /etc/sysctl.d/99-tailscale.conf"
+
+- name: download and enable tailscale
+  include_role:
+    name: artis3n.tailscale
+  vars:
+    tailscale_args: "--advertise-exit-node"

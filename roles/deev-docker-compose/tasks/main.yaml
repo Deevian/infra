@@ -1,0 +1,9 @@
+---
+
+- name: generate new compose file
+  ansible.builtin.include_role:
+    name: ironicbadger.docker_compose_generator
+
+- name: spin up services
+  ansible.builtin.shell:
+    cmd: "cd {{ docker_compose_generator_output_path }} && docker-compose up -d"

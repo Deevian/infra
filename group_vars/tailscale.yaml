@@ -1,0 +1,7 @@
+---
+
+hostname_tailscale: tailscale
+
+# deev-pkg
+package_list:
+  - curl

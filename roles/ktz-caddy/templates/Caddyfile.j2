@@ -3,9 +3,11 @@
     log {
         output file /var/log/caddy/default.access.log
     }
+
+    acme_dns cloudflare {{ cloudflare_auth_token }}
 }
 
-overseerr.{{ domain_old }}, overseerr.{{ domain }} {
+overseerr.{{ domain }}, overseerr.{{ domain_old }} {
     log {
         output file /var/log/caddy/overseerr.access.log
     }
@@ -13,10 +15,44 @@ overseerr.{{ domain_old }}, overseerr.{{ domain }} {
     reverse_proxy {{ infra_hosts.desktop }}:5055
 }
 
-plex.{{ domain_old }}, {{ domain }} {
+{{ domain }}, plex.{{ domain_old }} {
     log {
         output file /var/log/caddy/plex.access.log
     }
 
     reverse_proxy {{ infra_hosts.plex }}:32400
+}
+
+
+overseerr.h.{{ domain_old }} {
+    @blocked not remote_ip 192.168.0.0/16
+    respond @blocked "Access Denied" 403
+
+    log {
+        output file /var/log/caddy/overseerr.access.log
+    }
+
+    reverse_proxy {{ infra_hosts.desktop }}:5055
+}
+
+plex.h.{{ domain_old }} {
+    @blocked not remote_ip 192.168.0.0/16
+    respond @blocked "Access Denied" 403
+
+    log {
+        output file /var/log/caddy/plex.access.log
+    }
+
+    reverse_proxy {{ infra_hosts.plex }}:32400
+}
+
+radarr.h.{{ domain_old }} {
+    @blocked not remote_ip 192.168.0.0/16
+    respond @blocked "Access Denied" 403
+
+    log {
+        output file /var/log/caddy/radarr.access.log
+    }
+
+    reverse_proxy {{ infra_hosts.plex }}:7878
 }

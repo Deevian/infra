@@ -29,6 +29,17 @@ lxc_list:
     mounts: '{"mp0":"/mnt/media/,mp=/mnt/media/","mp1":"/mnt/downloads/,mp=/mnt/downloads/","mp2":"/mnt/appdata/,mp=/mnt/appdata/","mp3":"/mnt/data/,mp=/mnt/data/"}'
     diskGB: 1
     unprivileged: true
+  tailscale:
+    hostname: "tailscale"
+    vmid: 1002
+    ip: "{{ infra_hosts.tailscale }}/24"
+    hwaddr: "da:07:5f:33:dc:74"
+    mounts: '{"mp0":"/mnt/appdata/tailscale/,mp=/var/lib/tailscale"}'
+    diskGB: 1
+    unprivileged: true
+    extra_config:
+      - "lxc.cgroup2.devices.allow: c 10:200 rwm"
+      - "lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file"
   plex:
     hostname: "plex"
     vmid: 1003

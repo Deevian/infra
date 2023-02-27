@@ -11,6 +11,5 @@
 - name: configure caddy rules
   include_tasks:
     file: configure.yaml
-    apply:
-      tags:
-        - caddyconfig
+  tags:
+  - config

@@ -23,3 +23,16 @@ containers:
       - "TZ=Europe/Lisbon"
       - "PUID=1000"
       - "PGID={{ render_lxc_gid }}"
+
+  - service_name: radarr
+    active: true
+    image: lscr.io/linuxserver/radarr:latest
+    network_mode: host
+    devices:
+      - /dev/dri:/dev/dri
+    volumes:
+      - "{{ appdata_path }}/radarr/config:/config"
+      - "{{ media_path }}:/mnt/media"
+    restart: unless-stopped
+    environment:
+      - "TZ=Europe/Lisbon"
