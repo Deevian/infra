@@ -1,0 +1,31 @@
+{{ domain }} {
+    log {
+        output file /var/log/caddy/plex.access.log
+    }
+
+    reverse_proxy {{ hosts.plex.ip }}:32400
+}
+
+stream.{{ domain }} {
+    log {
+        output file /var/log/caddy/plex.access.log
+    }
+
+    reverse_proxy {{ hosts.plex.ip }}:32400
+}
+
+overseerr.{{ domain }} {
+    log {
+        output file /var/log/caddy/overserr.access.log
+    }
+
+    reverse_proxy {{ hosts.plex.ip }}:5055
+}
+
+notifiarr.{{ domain }} {
+    log {
+        output file /var/log/caddy/notifiarr.access.log
+    }
+
+    reverse_proxy {{ hosts.plex.ip }}:5454
+}

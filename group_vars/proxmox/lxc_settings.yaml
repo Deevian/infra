@@ -2,61 +2,101 @@
 
 ## deev-lxc
 lxc_api_node: "{{ hostname_proxmox }}"
-lxc_api_host: "{{ infra_hosts.proxmox }}"
+lxc_api_host: "{{ hosts.proxmox.ip }}"
 lxc_default_os_template: "local:vztmpl/ubuntu-22.10-standard_22.10-1_amd64.tar.zst"
 lxc_default_storage: "local-zfs"
-lxc_default_network_gateway: "{{ infra_hosts.gateway }}"
-lxc_default_nameserver: "1.1.1.1"
+lxc_default_network_gateway: "{{ hosts.gateway.ip }}"
+lxc_default_nameserver: "{{ hosts.dnsmasq.ip }}"
 lxc_default_features:
 lxc_default_mounts: "{}"
 lxc_default_memory: 32659
 lxc_default_cores: 8
 
 lxc_list:
-  caddy:
-    hostname: "caddy"
-    vmid: 1000
-    ip: "{{ infra_hosts.caddy }}/24"
-    hwaddr: "F6:A2:69:61:94:8D"
-    mounts: '{"mp0":"/mnt/appdata/caddy,mp=/mnt/appdata/caddy"}'
+  dnsmasq:
+    hostname: "{{ hosts.dnsmasq.hostname }}"
+    vmid: 101
+    ip: "{{ hosts.dnsmasq.ip }}/24"
+    ip6: "{{ hosts.dnsmasq.ip6 }}/64"
+    hwaddr: "{{ hosts.dnsmasq.mac }}"
+    mounts: |-
+      {
+        "mp0": "/mnt/appdata/dnsmasq,mp=/etc/dnsmasq"
+      }
     diskGB: 1
     unprivileged: true
-  samba:
-    hostname: "samba"
-    vmid: 1001
-    ip: "{{ infra_hosts.samba }}/24"
-    hwaddr: "e6:30:34:33:36:89"
-    mounts: '{"mp0":"/mnt/media/,mp=/mnt/media/","mp1":"/mnt/downloads/,mp=/mnt/downloads/","mp2":"/mnt/appdata/,mp=/mnt/appdata/","mp3":"/mnt/data/,mp=/mnt/data/"}'
-    diskGB: 1
-    unprivileged: true
+    nameserver: 1.1.1.1
+
   tailscale:
-    hostname: "tailscale"
-    vmid: 1002
-    ip: "{{ infra_hosts.tailscale }}/24"
-    hwaddr: "da:07:5f:33:dc:74"
-    mounts: '{"mp0":"/mnt/appdata/tailscale/,mp=/var/lib/tailscale"}'
+    hostname: "{{ hosts.tailscale.hostname }}"
+    vmid: 102
+    ip: "{{ hosts.tailscale.ip }}/24"
+    hwaddr: "{{ hosts.tailscale.mac }}"
+    mounts: |-
+      {
+        "mp0":"/mnt/appdata/tailscale/,mp=/var/lib/tailscale"
+      }
     diskGB: 1
     unprivileged: true
     extra_config:
       - "lxc.cgroup2.devices.allow: c 10:200 rwm"
       - "lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file"
-  plex:
-    hostname: "plex"
-    vmid: 1003
-    ip: "{{ infra_hosts.plex }}/24"
-    hwaddr: "3e:22:bd:64:39:9e"
-    mounts: '{"mp0":"/mnt/media/,mp=/mnt/media/","mp1":"/mnt/appdata/,mp=/mnt/appdata/","mp2":"/mnt/docker/,mp=/var/lib/docker/,backup=0","mp3":"/mnt/downloads/,mp=/mnt/downloads/"}'
+
+  caddy:
+    hostname: "{{ hosts.caddy.hostname }}"
+    vmid: 1000
+    ip: "{{ hosts.caddy.ip }}/24"
+    hwaddr: "{{ hosts.caddy.mac }}"
+    mounts: |-
+      {
+        "mp0":"/mnt/appdata/caddy,mp=/mnt/appdata/caddy"
+      }
+    diskGB: 2
+    unprivileged: true
+
+  samba:
+    hostname: "{{ hosts.samba.hostname }}"
+    vmid: 1001
+    ip: "{{ hosts.samba.ip }}/24"
+    hwaddr: "{{ hosts.samba.mac }}"
+    mounts: |-
+      {
+        "mp0":"/mnt/media/,mp=/mnt/media/",
+        "mp1":"/mnt/downloads/,mp=/mnt/downloads/",
+        "mp2":"/mnt/appdata/,mp=/mnt/appdata/",
+        "mp3":"/mnt/data/,mp=/mnt/data/"
+      }
     diskGB: 1
+    unprivileged: true
+
+  plex:
+    hostname: "{{ hosts.plex.hostname }}"
+    vmid: 1003
+    ip: "{{ hosts.plex.ip }}/24"
+    hwaddr: "{{ hosts.plex.mac }}"
+    mounts: 
+      {
+        "mp0":"/mnt/media/,mp=/mnt/media/",
+        "mp1":"/mnt/appdata/plex/,mp=/mnt/appdata/",
+        "mp2":"/mnt/downloads/,mp=/mnt/downloads/",
+        "mp3":"/dev/zvol/rpool/docker,mp=/var/lib/docker/,backup=0"
+      }
+    diskGB: 2
     features: "nesting=1"
     unprivileged: true
     extra_config:
       - "lxc.cgroup.devices.allow: c 226:128 rwm"
       - "lxc.cgroup2.devices.allow: c 226:128 rwm"
       - "lxc.mount.entry: /dev/dri/renderD128 dev/dri/renderD128 none bind,optional,create=file 0 0"
-  prometheus:
-    hostname: "prometheus"
+
+  checkmk:
+    hostname: "{{ hosts.checkmk.hostname }}"
     vmid: 1004
-    ip: "{{ infra_hosts.prometheus }}/24"
-    hwaddr: "52:49:74:22:d0:8f"
-    diskGB: 1
+    ip: "{{ hosts.checkmk.ip }}/24"
+    hwaddr: "{{ hosts.checkmk.mac }}"
+    mounts: |-
+      {
+        "mp0":"/mnt/appdata/checkmk,mp=/backup"
+      }
+    diskGB: 4
     unprivileged: true

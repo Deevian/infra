@@ -1,6 +1,7 @@
 ---
 
-hostname_samba: samba
+hostname: "{{ hosts.samba.hostname }}"
+hostname_samba: "{{ hostname }}"
 
 samba_users:
   - name: root
@@ -25,7 +26,7 @@ samba_shares:
     read_only: no
   - name: downloads
     browseable: true
-    path: /mnt/downloads
+    path: /mnt/media/downloads
     write_list: "{{ main_username }}"
     valid_users: "{{ main_username }}"
     owner: "{{ main_username }}"

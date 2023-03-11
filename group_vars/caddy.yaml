@@ -1,4 +1,10 @@
 ---
 
-hostname_caddy: caddy
+hostname: "{{ hosts.caddy.hostname }}"
+hostname_caddy: "{{ hostname }}"
+
 caddy_data_path: /mnt/appdata
+
+# deev-pkg
+package_list:
+  - golang

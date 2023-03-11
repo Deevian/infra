@@ -4,6 +4,7 @@
     vars_files:
       - 'vars/vault.yaml'
     roles:
+      - role: deev-inject-hosts
       - role: deev-pkg
       - role: ironicbadger.figurine
       - role: ironicbadger.hddtemp
@@ -11,6 +12,7 @@
       - role: deev-proxmox
       - role: ktz-sanoid
       - role: ironicbadger.snapraid
+      - role: deev-checkmk-agent
 
   - hosts: caddy
     vars_files:
@@ -18,6 +20,7 @@
     roles:
       - role: deev-pkg
       - role: ktz-caddy
+      - role: deev-checkmk-agent
 
   - hosts: samba
     vars_files:
@@ -25,6 +28,7 @@
     roles:
       - role: deev-pkg
       - role: vladgh.samba.server
+      - role: deev-checkmk-agent
 
   - hosts: tailscale
     vars_files:
@@ -32,6 +36,7 @@
     roles:
       - role: deev-pkg
       - role: deev-tailscale
+      - role: deev-checkmk-agent
 
   - hosts: plex
     vars_files:
@@ -41,11 +46,25 @@
       - role: geerlingguy.docker
       - role: deev-docker-compose
         tags: compose
+      - role: deev-checkmk-agent
+    tasks:
+      - name: install python docker for checkmk
+        tags: checkmkagent
+        ansible.builtin.pip:
+          name: docker
 
-  - hosts: prometheus
+  - hosts: dnsmasq
     vars_files:
       - 'vars/vault.yaml'
     roles:
       - role: deev-pkg
-      - role: cloudalchemy.prometheus
-      - role: deev-prometheus
+      - role: deev-dhcp
+      - role: deev-checkmk-agent
+
+  - hosts: checkmk
+    vars_files:
+      - 'vars/vault.yaml'
+    roles:
+      - role: deev-pkg
+      - role: deev-checkmk-server
+      - role: deev-checkmk-agent

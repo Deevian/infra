@@ -1,12 +1,26 @@
 ---
 
-hostname_plex: plex
+hostname: "{{ hosts.plex.hostname }}"
+hostname_plex: "{{ hostname }}"
+
+# deev-checkmk-agent
+checkmk_agent_hash: afb596b83bfbad40
+
+# deev-pkg
+package_list:
+  - gpg
+  - python3-pip
 
 appdata_path: /mnt/appdata
 media_path: /mnt/media
 downloads_path: /mnt/downloads
 
-docker_compose_version: 1.29.2
+docker_compose_version: v2.16.0
+global_env_vars:
+  - "PUID={{ docker_uid }}"
+  - "PGID={{ docker_gid }}"
+  - "TZ={{ ntp_timezone }}"
+  - "UMASK=002"
 
 containers:
   - service_name: plex
@@ -17,22 +31,97 @@ containers:
       - /dev/dri:/dev/dri
     volumes:
       - "{{ appdata_path }}/plex/config:/config"
-      - "{{ media_path }}:/mnt/media"
+      - "{{ media_path }}:/mnt/media:ro"
+    include_global_env_vars: true
     restart: unless-stopped
-    environment:
-      - "TZ=Europe/Lisbon"
-      - "PUID=1000"
-      - "PGID={{ render_lxc_gid }}"
+
+  - service_name: nzbget
+    active: true
+    image: lscr.io/linuxserver/nzbget:latest
+    network_mode: host
+    volumes:
+      - "{{ appdata_path }}/nzbget:/config"
+      - "{{ downloads_path }}:/downloads"
+    include_global_env_vars: true
+    restart: unless-stopped
+
+  - service_name: deluge
+    active: true
+    image: lscr.io/linuxserver/deluge:latest
+    network_mode: host
+    volumes:
+      - "{{ appdata_path }}/deluge:/config"
+      - "{{ downloads_path }}:/downloads"
+    include_global_env_vars: true
+    restart: unless-stopped
+
+  - service_name: prowlarr
+    active: true
+    image: lscr.io/linuxserver/prowlarr:develop
+    network_mode: host
+    volumes:
+      - "{{ appdata_path }}/prowlarr:/config"
+    include_global_env_vars: true
+    restart: unless-stopped
 
   - service_name: radarr
     active: true
-    image: lscr.io/linuxserver/radarr:latest
+    image: lscr.io/linuxserver/radarr:develop
     network_mode: host
-    devices:
-      - /dev/dri:/dev/dri
     volumes:
-      - "{{ appdata_path }}/radarr/config:/config"
+      - "{{ appdata_path }}/radarr:/config"
       - "{{ media_path }}:/mnt/media"
+      - "{{ downloads_path }}:/downloads"
+    include_global_env_vars: true
     restart: unless-stopped
-    environment:
-      - "TZ=Europe/Lisbon"
+
+  - service_name: sonarr
+    active: true
+    image: lscr.io/linuxserver/sonarr:develop
+    network_mode: host
+    volumes:
+      - "{{ appdata_path }}/sonarr:/config"
+      - "{{ media_path }}:/mnt/media"
+      - "{{ downloads_path }}:/downloads"
+    include_global_env_vars: true
+    restart: unless-stopped
+
+  - service_name: overseerr
+    active: true
+    image: lscr.io/linuxserver/overseerr:develop
+    network_mode: host
+    volumes:
+      - "{{ appdata_path }}/overseerr:/config"
+    include_global_env_vars: true
+    restart: unless-stopped
+
+  - service_name: bazarr
+    active: true
+    image: lscr.io/linuxserver/bazarr:latest
+    network_mode: host
+    volumes:
+      - "{{ appdata_path }}/bazarr:/config"
+      - "{{ media_path }}:/mnt/media"
+    include_global_env_vars: true
+    restart: unless-stopped
+
+  - service_name: tautulli
+    active: true
+    image: lscr.io/linuxserver/tautulli:latest
+    network_mode: host
+    volumes:
+      - "{{ appdata_path }}/tautulli:/config"
+    include_global_env_vars: true
+    restart: unless-stopped
+
+  - service_name: notifiarr
+    hostname: notifiarr
+    active: true
+    image: golift/notifiarr
+    network_mode: host
+    volumes:
+      - "{{ appdata_path }}/notifiarr:/config"
+      - /var/run/utmp:/var/run/utmp
+      - /etc/machine-id:/etc/machine-id
+    include_global_env_vars: true
+    restart: unless-stopped

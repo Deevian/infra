@@ -1,10 +1,12 @@
 ---
 
-- name: download latest release
-  get_url:
-    url: "{{ caddy_amd64_linux_cloudflare_binary_url }}"
-    dest: /usr/local/bin/caddy
-    mode: a+x
+- name: install xcaddy
+  ansible.builtin.apt:
+    deb: "{{ xcaddy_binary_url }}"
+
+- name: build caddy
+  ansible.builtin.shell:
+    cmd: xcaddy build latest --with github.com/caddy-dns/cloudflare --output /usr/local/bin/caddy
 
 - name: create caddy config folder
   ansible.builtin.file:

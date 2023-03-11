@@ -1,0 +1,55 @@
+proxmox.{{ default_domain }} {
+    reverse_proxy https://{{ hosts.proxmox.ip }}:8006 {
+        transport http {
+                tls_insecure_skip_verify
+        }
+    }
+}
+
+gateway.{{ default_domain }} {
+    reverse_proxy {{ hosts.gateway.ip }}
+}
+
+checkmk.{{ default_domain }} {
+    reverse_proxy {{ hosts.checkmk.ip }}
+}
+
+plex.{{ default_domain }} {
+    reverse_proxy {{ hosts.plex.ip }}:32400
+}
+
+nzbget.{{ default_domain }} {
+    reverse_proxy {{ hosts.plex.ip }}:6789
+}
+
+deluge.{{ default_domain }} {
+    reverse_proxy {{ hosts.plex.ip }}:8112
+}
+
+prowlarr.{{ default_domain }} {
+    reverse_proxy {{ hosts.plex.ip }}:9696
+}
+
+radarr.{{ default_domain }} {
+    reverse_proxy {{ hosts.plex.ip }}:7878
+}
+
+sonarr.{{ default_domain }} {
+    reverse_proxy {{ hosts.plex.ip }}:8989
+}
+
+overseerr.{{ default_domain }} {
+    reverse_proxy {{ hosts.plex.ip }}:5055
+}
+
+bazarr.{{ default_domain }} {
+    reverse_proxy {{ hosts.plex.ip }}:6767
+}
+
+tautulli.{{ default_domain }} {
+    reverse_proxy {{ hosts.plex.ip }}:8181
+}
+
+notifiarr.{{ default_domain }} {
+    reverse_proxy {{ hosts.plex.ip }}:5454
+}

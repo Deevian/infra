@@ -1,7 +1,7 @@
 ---
 
 - name: generate new compose file
-  ansible.builtin.include_role:
+  ansible.builtin.import_role:
     name: ironicbadger.docker_compose_generator
 
 - name: spin up services

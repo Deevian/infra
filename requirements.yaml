@@ -2,8 +2,7 @@
 - src: ironicbadger.hddtemp
 - src: ironicbadger.snapraid
 - src: ironicbadger.proxmox_nag_removal
-- src: cloudalchemy.prometheus
 - src: ironicbadger.docker_compose_generator
 - src: geerlingguy.docker
-- src: grog.package
 - src: artis3n.tailscale
+- src: bertvv.dnsmasq

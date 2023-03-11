@@ -50,13 +50,10 @@ lxc.cgroup.devices.allow: c 226:128 rwm
 lxc.cgroup2.devices.allow: c 226:128 rwm
 lxc.mount.entry: /dev/dri/renderD128 dev/dri/renderD128 none bind,optional,create=file 0 0
 
-
-Create a zvol (on a root pool in this example, but can be anywhere): zfs create -s -V 30G rpool/docker_lxc. docker_lxc is the zvol name, can be anything, and 30G is a 30GB size (arbitrary tbh, depends on how many images you'll have and how you manager other container data)
-
-Check it's actually sparse: zfs get volsize,referenced rpool/docker_lxc, volsize should be 30GB (that's the max it can take), referenced is how much is actually used (should be very little when it's just created)
-
-Format it as ext4: mkfs.ext4 /dev/zvol/rpool/docker_lxc
-
-Mount it into a temp location to change permissions (as mentioned in one of the replies): mkdir /tmp/zvol_tmp, mount /dev/zvol/rpool/docker_lxc /tmp/zvol_tmp, chown -R 100000:100000 /tmp/zvol_tmp, umount /tmp/zvol_tmp
-
-add mountpoint into lxc, adding this into /etc/pve/lxc/<container id>.conf: mpX: /dev/zvol/rpool/docker_lxc, mp=/var/lib/docker, backup=0, where X is the number for your mountpoint (in case there are others already present)
+# Docker ZVOL because of ZFS woes
+zfs create -s -V 30G rpool/docker
+mkfs.xfs /dev/zvol/rpool/docker
+mkdir /tmp/zvol_tmp
+mount /dev/zvol/rpool/docker_lxc /tmp/zvol_tmp
+chown -R lxc:lxc /tmp/zvol_tmp
+umount /tmp/zvol_tmp

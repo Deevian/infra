@@ -37,7 +37,7 @@
     pubkey: "{{ ssh_pubkey }}"
     storage: "{{ item.value.storage | default(lxc_default_storage) }}"
     disk: "{{ item.value.diskGB }}"
-    netif: '{"net0":"name=eth0,bridge=vmbr0,type=veth,hwaddr={{ item.value.hwaddr }},ip={{ item.value.ip }},gw={{ item.value.network_gateway | default(lxc_default_network_gateway) }}"}'
+    netif: '{"net0":"name=eth0,bridge=vmbr0,type=veth,hwaddr={{ item.value.hwaddr }},ip={{ item.value.ip }},gw={{ item.value.network_gateway | default(lxc_default_network_gateway) }}{{ ",ip6=" + item.value.ip6 if "ip6" in item.value else "" }}"}'
     mounts: "{{ item.value.mounts | default(lxc_default_mounts) }}"
     features: "{{ item.value.features | default(lxc_default_features) }}"
     nameserver: "{{ item.value.nameserver | default(lxc_default_nameserver) }}"

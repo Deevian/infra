@@ -1,31 +1,55 @@
+## PROXMOX
 proxmox:
 	ansible-playbook -b run.yaml --limit proxmox
 
+## DNSMASQ
+dnsmasq:
+	ansible-playbook -b run-lxc.yaml --limit proxmox --tags dnsmasq
+	sleep 5
+	ansible-playbook -b run.yaml --limit dnsmasq
+dnsmasq-config:
+	ansible-playbook -b run.yaml --limit dnsmasq --tags config
+
+## TAILSCALE
 tailscale:
 	ansible-playbook -b run-lxc.yaml --limit proxmox --tags tailscale
+	sleep 5
 	ansible-playbook -b run.yaml --limit tailscale
 
+## CADDY
 caddy:
 	ansible-playbook -b run-lxc.yaml --limit proxmox --tags caddy
+	sleep 5
 	ansible-playbook -b run.yaml --limit caddy
-
 caddy-config:
 	ansible-playbook -b run.yaml --limit caddy --tags config
 
+## SAMBA
 samba:
 	ansible-playbook -b run-lxc.yaml --limit proxmox --tags samba
+	sleep 5
 	ansible-playbook -b run.yaml --limit samba
 
+## PLEX
 plex:
 	ansible-playbook -b run-lxc.yaml --limit proxmox --tags plex
+	sleep 5
 	ansible-playbook -b run.yaml --limit plex
-
 plex-compose:
 	ansible-playbook -b run.yaml --limit plex --tags compose
 
-prometheus:
-	ansible-playbook -b run-lxc.yaml --limit proxmox --tags prometheus
-	ansible-playbook -b run.yaml --limit prometheus
+## CHECKMK
+checkmk:
+	ansible-playbook -b run-lxc.yaml --limit proxmox --tags checkmk
+	sleep 5
+	ansible-playbook -b run.yaml --limit checkmk
+
+## UTILS
+checkmk-agents:
+	ansible-playbook -b run.yaml --tags checkmk-agent
+
+update-packages:
+	ansible-playbook -b run.yaml --tags update-packages
 
 ## Generic LXC commands
 lxc-create:

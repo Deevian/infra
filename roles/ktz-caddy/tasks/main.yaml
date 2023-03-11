@@ -9,7 +9,7 @@
     file: install.yaml
 
 - name: configure caddy rules
-  include_tasks:
+  import_tasks:
     file: configure.yaml
   tags:
   - config

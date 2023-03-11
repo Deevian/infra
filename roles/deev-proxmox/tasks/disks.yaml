@@ -4,8 +4,8 @@
   file:
     dest: "{{ item.path }}"
     state: directory
-    owner: "{{ main_lxc_uid }}"
-    group: "{{ main_lxc_gid }}"
+    owner: "{{ lxc_uid }}"
+    group: "{{ lxc_gid }}"
     mode: 0777
   with_items:
     - "{{ snapraid_parity_disks }}"

@@ -1,0 +1,47 @@
+---
+
+hostname: "{{ hosts.dnsmasq.hostname }}"
+hostname_dnsmasq: "{{ hostname }}"
+
+# deev-pkg
+package_list:
+  - dnsmasq
+
+dnsmasq_config_dir: /etc/dnsmasq/dnsmasq.d
+
+dns_overrides:
+  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "gateway.{{ default_domain }}" }
+  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "proxmox.{{ default_domain }}" }
+  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "checkmk.{{ default_domain }}" }
+
+  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "plex.{{ default_domain }}" }
+  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "radarr.{{ default_domain }}" }
+  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "bazarr.{{ default_domain }}" }
+  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "sonarr.{{ default_domain }}" }
+  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "nzbget.{{ default_domain }}" }
+  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "deluge.{{ default_domain }}" }
+  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "overseerr.{{ default_domain }}" }
+  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "notifiarr.{{ default_domain }}" }
+  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "prowlarr.{{ default_domain }}" }
+  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "tautulli.{{ default_domain }}" }
+
+dhcp_reservations:
+  - "{{ hosts.proxmox }}"
+  - "{{ hosts.dnsmasq }}"
+  - "{{ hosts.tailscale }}"
+  - "{{ hosts.caddy }}"
+  - "{{ hosts.samba }}"
+  - "{{ hosts.plex }}"
+  - "{{ hosts.checkmk }}"
+  - "{{ hosts.gateway }}"
+
+  - {mac: fc:34:97:a5:eb:a1, ip: 10.10.1.253, hostname: desktop}
+  - {mac: 18:9c:27:02:2c:19, ip: 10.10.1.170, hostname: box}
+  - {mac: 48:b0:2d:92:27:7f, ip: 10.10.1.109, hostname: shield}
+
+  # - {mac: 50:2c:c6:ba:1e:0f, ip: 10.10.1.174, hostname: ???}
+  # - {mac: da:47:32:03:4a:61, ip: 10.10.1.160, hostname: ???}
+  # - {mac: 50:2c:c6:a7:15:15, ip: 10.10.1.181, hostname: ???}
+  # - {mac: 50:2c:c6:a6:a9:a8, ip: 10.10.1.140, hostname: ???}
+  # - {mac: 50:2c:c6:a7:2d:e3, ip: 10.10.1.135, hostname: ???}
+  # - {mac: 1c:98:c1:e7:b5:f7, ip: 10.10.1.206, hostname: ???}

@@ -1,0 +1,30 @@
+---
+# defaults file for checkmk_server
+checkmk_server_base_url: "https://download.checkmk.com/checkmk"
+checkmk_server_cache_valid_time: "3600"
+checkmk_server_download: "check-mk-free-{{ checkmk_server_version }}_0.{{ ansible_distribution_release }}_amd64.deb"
+checkmk_server_download_dest: "{{ checkmk_server_download_dest_folder }}/{{ checkmk_server_download }}"
+checkmk_server_download_dest_folder: "/opt"
+checkmk_server_download_mode: "0644"
+checkmk_server_download_url: "{{ checkmk_server_base_url }}/{{ checkmk_server_version }}/{{ checkmk_server_download }}"
+checkmk_server_htpasswd_group: "{{ checkmk_server_site }}"
+checkmk_server_htpasswd_mode: "0660"
+checkmk_server_htpasswd_name: "cmkadmin"
+checkmk_server_htpasswd_owner: "{{ checkmk_server_site }}"
+checkmk_server_htpasswd_path: "/opt/omd/sites/{{ checkmk_server_site }}/etc/htpasswd"
+checkmk_server_install_package: "{{ checkmk_server_download_dest }}"
+checkmk_server_man_mode: "0755"
+checkmk_server_man_path: "/usr/share/man/man8"
+checkmk_server_omd_create_command: "omd create {{ checkmk_server_site }}"
+checkmk_server_omd_create_creates: "/opt/omd/sites/{{ checkmk_server_site }}"
+checkmk_server_omd_setup_command: "omd setup"
+checkmk_server_omd_setup_creates: "/opt/omd"
+checkmk_server_omd_start_command: "omd start {{ checkmk_server_site }}"
+checkmk_server_omd_start_creates: "/opt/omd/sites/{{ checkmk_server_site }}/tmp/apache/run/apache.pid"
+checkmk_server_prerequisites:
+  - python3-apt
+  - python3-passlib
+checkmk_server_site: "test"
+checkmk_server_version: "2.1.0p23"
+checkmk_server_web_service: "apache2"
+checkmk_server_download_checksum: "sha256:e86ca72a5801e1b5e51353c30b8f4b8367845c3843501040bc5933ab6a618697"

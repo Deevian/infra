@@ -1,6 +1,0 @@
----
-
-- name: install prometheus-pve-exporter
-  ansible.builtin.pip:
-    name: prometheus-pve-exporter
-    virtualenv: /opt/prometheus-pve-exporter/

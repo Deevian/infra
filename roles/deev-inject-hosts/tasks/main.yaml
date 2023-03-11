@@ -1,0 +1,16 @@
+---
+
+- name: template hosts file
+  tags: update-hosts
+  template:
+    src: templates/hosts.j2
+    dest: "/etc/hosts"
+    owner: "root"
+    group: "root"
+  become: true
+
+- name: create ignore.hosts file
+  tags: update-hosts
+  ansible.builtin.file:
+    path: "/etc/.pve-ignore.hosts"
+    state: touch

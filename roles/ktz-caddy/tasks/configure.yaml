@@ -15,6 +15,16 @@
     src: templates/Caddyfile.j2
     dest: "{{ caddy_linux_caddyfile_path }}/Caddyfile"
 
+- name: template and install exposed config
+  template:
+    src: templates/exposed.caddy.j2
+    dest: "{{ caddy_linux_caddyfile_path }}/exposed.caddy"
+
+- name: template and install internal config
+  template:
+    src: templates/internal.caddy.j2
+    dest: "{{ caddy_linux_caddyfile_path }}/internal.caddy"
+
 - name: enable caddy service
   ansible.builtin.systemd:
     name: caddy

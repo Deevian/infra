@@ -22,12 +22,12 @@
   ansible.builtin.group:
     name: lxc
     state: present
-    gid: "{{ main_lxc_gid }}"
+    gid: "{{ lxc_gid }}"
 
 - name: add user 'lxc' exists with the correct uid
   ansible.builtin.user:
     name: lxc
-    uid: "{{ main_lxc_uid }}"
+    uid: "{{ lxc_uid }}"
     shell: /usr/sbin/nologin
     create_home: false
     group: render

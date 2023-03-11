@@ -1,0 +1,76 @@
+# Listen on this standard DNS port
+port=53
+
+# Never forward plain names (without a dot or domain part)
+domain-needed
+
+# Never forward addresses in the non-routed address spaces.
+bogus-priv
+
+# Don't read /etc/hosts file
+no-hosts
+
+# Don't read /etc/resolv.conf or any other file.
+# Use only the configuration provided by this file.
+no-resolv
+
+# Don't poll changes from external files (like /etc/resolv.conf)
+no-poll
+
+# Never forward plain names (without a dot or domain part)
+domain-needed
+
+# Never forward addresses in the non-routed address spaces.
+bogus-priv
+
+# Upstream DNS servers
+server={{ nextdns_ipv6_1 }}
+server={{ nextdns_ipv4_1 }}
+server={{ nextdns_ipv6_2 }}
+server={{ nextdns_ipv4_2 }}
+add-cpe-id={{ nextdns_cpe_id }}
+
+# Force the upstream servers to be used in order
+strict-order
+
+# IPv4 range
+dhcp-range=10.10.1.100,10.10.1.250,24h
+
+# IPv4 DNS server
+dhcp-option=option:dns-server,10.10.1.11
+
+# IPv4 gateway
+dhcp-option=option:router,10.10.1.254
+
+# IPv6 range
+# - The prefix is retrieved from eth0 interface (constructor:eth0 option)
+# - Details about the available options:
+#   https://weirdfellow.wordpress.com/2014/09/05/dhcpv6-and-ra-with-dnsmasq/
+# - 'ra-names,slaac' means Dnsmasq tries to guess the auto-configured IPv6 address and send a new address + DNS configuration
+#
+dhcp-range=::1681:ff,::1681:ffff,constructor:eth0,ra-names,slaac,12h
+
+# IPv6 DNS server
+dhcp-option=option6:dns-server,[2001:8a0:ee85:b100::1681:2]
+
+# Ask client to poll for option changes every six hours
+dhcp-option=option6:information-refresh-time,6h
+
+# Mark created RA with high priority and specify 0 for router lifetime
+# to specify the Dnsmasq address should not be used as a gateway
+ra-param=eth0,high,0,0
+
+# Don't fill the logs with RA related messages
+quiet-ra
+
+# Set the DHCP server to authoritative mode to speed up leases acquisition.
+dhcp-authoritative
+
+# Enable DHCPv4 Rapid Commit
+dhcp-rapid-commit
+
+# Increase the cachesize
+cache-size=10000
+
+# Don't store in cache the invalid resolutions
+no-negcache

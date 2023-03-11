@@ -1,0 +1,26 @@
+---
+
+- name: ensure hostname is set correctly
+  hostname:
+    name: "{{ hostname_dnsmasq }}"
+
+- name: disable systemd-resolve
+  ansible.builtin.shell:
+    cmd: "systemctl disable systemd-resolved.service"
+
+- name: stop systemd-resolve
+  ansible.builtin.shell:
+    cmd: "service systemd-resolved stop"
+
+- name: check for duplicated items
+  import_tasks: duplicate_checks.yaml
+  tags: config
+
+- name: template config files into place
+  include_tasks: template.yaml
+  tags: config
+
+- name: restart dnsmasq
+  ansible.builtin.shell:
+    cmd: "systemctl restart dnsmasq"
+    tags: config

@@ -1,8 +1,12 @@
 ---
 
 target_os: debian
-hostname_proxmox: proxmox
-main_username: root
+
+hostname: "{{ hosts.proxmox.hostname }}"
+hostname_proxmox: "{{ hostname }}"
+
+# deev-checkmk-agent
+checkmk_agent_hash: ac63a133f846b607
 
 ## deev-pkg
 package_list:
@@ -59,15 +63,46 @@ snapraid_runner: true
 snapraid_bin_path: /usr/bin/snapraid
 
 snapraid_parity_disks:
-  - { path: /mnt/parity-disks/disk-1, diskbyid: /dev/disk/by-id/ata-ST18000NM000J-2TV103_ZR5DTXYF-part1, fs: xfs, opts: defaults, content: true }
+  - {
+      path: /mnt/parity-disks/disk-1,
+      diskbyid: /dev/disk/by-id/ata-ST18000NM000J-2TV103_ZR5DTXYF-part1,
+      fs: xfs,
+      opts: defaults,
+      content: true
+    }
 
 snapraid_data_disks:
-  - { path: /mnt/media-disks/disk-1, diskbyid: /dev/disk/by-id/ata-ST18000NM000J-2TV103_ZR5DTKW5-part1, fs: xfs, opts: defaults, content: true }
-  - { path: /mnt/media-disks/disk-2, diskbyid: /dev/disk/by-id/ata-ST18000NM000J-2TV103_WR509RRY-part1, fs: xfs, opts: defaults, content: true }
+  - {
+      path: /mnt/media-disks/disk-1,
+      diskbyid: /dev/disk/by-id/ata-ST18000NM000J-2TV103_ZR5DTKW5-part1,
+      fs: xfs,
+      opts: defaults,
+      content: true
+    }
+  - {
+      path: /mnt/media-disks/disk-2,
+      diskbyid: /dev/disk/by-id/ata-ST18000NM000J-2TV103_WR509RRY-part1,
+      fs: xfs,
+      opts: defaults,
+      content: true
+    }
 
 fstab_mergerfs:
-  - { source: "/mnt/media-disks/*:/mnt/data", mountpoint: "/mnt/storage", fs: fuse.mergerfs, opts: "defaults,nonempty,allow_other,use_ino,moveonenospc=true,category.create=epmfs,dropcacheonclose=true,minfreespace=250G,fsname=mergerfs" }
-  - { source: "/mnt/media-disks/*", mountpoint: "/mnt/media", fs: fuse.mergerfs, opts: "defaults,nonempty,allow_other,use_ino,moveonenospc=true,category.create=mspmfs,dropcacheonclose=true,minfreespace=250G,fsname=jbod" }
+  - {
+      source: "/mnt/media-disks/*:/mnt/data",
+      mountpoint: "/mnt/storage",
+      fs: fuse.mergerfs,
+      opts: "defaults,nonempty,allow_other,use_ino,moveonenospc=true,category.create=epmfs,dropcacheonclose=true,minfreespace=250G,fsname=mergerfs"
+    }
+  - {
+      source: "/mnt/media-disks/*",
+      mountpoint: "/mnt/media",
+      fs: fuse.mergerfs,
+      opts: "defaults,nonempty,allow_other,use_ino,moveonenospc=true,category.create=mspmfs,dropcacheonclose=true,minfreespace=250G,fsname=jbod"
+    }
 
 snapraid_runner_cron_jobs:
   - { job: '{{ snapraid_runner_command }}', name: 'snapraid_runner', weekday: '*', hour: '04' }
+
+snapraid_scrub_percent: 3
+snapraid_scrub_age: 30

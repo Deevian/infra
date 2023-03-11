@@ -1,6 +1,7 @@
 ---
 
-hostname_tailscale: tailscale
+hostname: "{{ hosts.tailscale.hostname }}"
+hostname_tailscale: "{{ hostname }}"
 
 # deev-pkg
 package_list:

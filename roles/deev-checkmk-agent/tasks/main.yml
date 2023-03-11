@@ -1,0 +1,27 @@
+---
+
+- name: download checkmk agent for host
+  tags: checkmk-agent
+  ansible.builtin.get_url:
+    dest: "/tmp/agent.deb"
+    mode: 0644
+    url: "http://{{ checkmk_server_host }}/{{ checkmk_server_site }}/check_mk/download_agent.py?hash={{ checkmk_agent_hash }}&os=linux_deb&_username=automation&_secret={{ checkmk_automation_secret }}"
+
+- name: install checkmk agent for host
+  tags: checkmk-agent
+  ansible.builtin.apt:
+    deb: "/tmp/agent.deb"
+    state: present
+
+- name: cleanup installation file
+  tags: checkmk-agent
+  ansible.builtin.file:
+    path: "/tmp/agent.deb"
+    state: absent
+
+- name: setup agent update
+  tags: checkmk-agent
+  ansible.builtin.shell:
+    cmd: "cmk-update-agent register -s {{ checkmk_server_host }} -i {{ checkmk_server_site }} -H {{ hostname }}.i.{{ default_domain }} -p http -U automation -S {{ checkmk_automation_secret }} -v"
+
+

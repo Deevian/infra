@@ -1,0 +1,75 @@
+---
+- name: Install pre-requisites | APT
+  ansible.builtin.apt:
+    name: "{{ checkmk_server_prerequisites }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: "{{ checkmk_server_cache_valid_time }}"
+  tags:
+    - checkmk-server
+
+- name: Download CheckMK Free | GET_URL
+  ansible.builtin.get_url:
+    dest: "{{ checkmk_server_download_dest }}"
+    mode: "{{ checkmk_server_download_mode }}"
+    url: "{{ checkmk_server_download_url }}"
+    checksum: "{{ checkmk_server_download_checksum }}"
+  tags:
+    - checkmk-server
+
+- name: Make sure the man8 folder exists | FILE
+  ansible.builtin.file:
+    path: "{{ checkmk_server_man_path }}"
+    state: directory
+    mode: "{{ checkmk_server_man_mode }}"
+  tags:
+    - checkmk-server
+
+- name: Install CheckMK Free | APT
+  ansible.builtin.apt:
+    deb: "{{ checkmk_server_install_package }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: "{{ checkmk_server_cache_valid_time }}"
+  tags:
+    - checkmk-server
+
+- name: Create OMD site | COMMAND
+  ansible.builtin.command: "{{ checkmk_server_omd_create_command }}"
+  args:
+    creates: "{{ checkmk_server_omd_create_creates }}"
+  register: checkmk_server_omd_create_register
+  tags:
+    - checkmk-server
+
+- name: Change OMD site admin password | HTPASSWD
+  community.general.htpasswd:
+    create: yes
+    group: "{{ checkmk_server_htpasswd_group }}"
+    owner: "{{ checkmk_server_htpasswd_owner }}"
+    mode: "{{ checkmk_server_htpasswd_mode }}"
+    name: "{{ checkmk_server_htpasswd_name }}"
+    path: "{{ checkmk_server_htpasswd_path }}"
+    password: "{{ checkmk_server_adminpw }}"
+  become: true
+  become_user: "{{ checkmk_server_htpasswd_owner }}"
+  vars:
+    ansible_ssh_pipelining: yes
+  when: checkmk_server_adminpw is defined
+  tags:
+    - checkmk-server
+
+- name: Start OMD site | COMMAND
+  ansible.builtin.command: "{{ checkmk_server_omd_start_command }}"
+  args:
+    creates: "{{ checkmk_server_omd_start_creates }}"
+  tags:
+    - checkmk-server
+
+- name: Start and enable Apache2 | SERVICE
+  ansible.builtin.service:
+    name: "{{ checkmk_server_web_service }}"
+    state: started
+    enabled: yes
+  tags:
+    - checkmk-server
