@@ -62,7 +62,6 @@ lxc_list:
     mounts: |-
       {
         "mp0":"/mnt/media/,mp=/mnt/media/",
-        "mp1":"/mnt/downloads/,mp=/mnt/downloads/",
         "mp2":"/mnt/appdata/,mp=/mnt/appdata/",
         "mp3":"/mnt/data/,mp=/mnt/data/"
       }
@@ -74,11 +73,10 @@ lxc_list:
     vmid: 1003
     ip: "{{ hosts.plex.ip }}/24"
     hwaddr: "{{ hosts.plex.mac }}"
-    mounts: 
+    mounts:
       {
         "mp0":"/mnt/media/,mp=/mnt/media/",
         "mp1":"/mnt/appdata/plex/,mp=/mnt/appdata/",
-        "mp2":"/mnt/downloads/,mp=/mnt/downloads/",
         "mp3":"/dev/zvol/rpool/docker,mp=/var/lib/docker/,backup=0"
       }
     diskGB: 2

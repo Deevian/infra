@@ -3,7 +3,7 @@
   ansible.builtin.apt:
     name: "{{ checkmk_server_prerequisites }}"
     state: present
-    update_cache: yes
+    update_cache: true
     cache_valid_time: "{{ checkmk_server_cache_valid_time }}"
   tags:
     - checkmk-server
@@ -29,7 +29,7 @@
   ansible.builtin.apt:
     deb: "{{ checkmk_server_install_package }}"
     state: present
-    update_cache: yes
+    update_cache: true
     cache_valid_time: "{{ checkmk_server_cache_valid_time }}"
   tags:
     - checkmk-server
@@ -44,7 +44,7 @@
 
 - name: Change OMD site admin password | HTPASSWD
   community.general.htpasswd:
-    create: yes
+    create: true
     group: "{{ checkmk_server_htpasswd_group }}"
     owner: "{{ checkmk_server_htpasswd_owner }}"
     mode: "{{ checkmk_server_htpasswd_mode }}"
@@ -54,7 +54,7 @@
   become: true
   become_user: "{{ checkmk_server_htpasswd_owner }}"
   vars:
-    ansible_ssh_pipelining: yes
+    ansible_ssh_pipelining: true
   when: checkmk_server_adminpw is defined
   tags:
     - checkmk-server
@@ -70,6 +70,6 @@
   ansible.builtin.service:
     name: "{{ checkmk_server_web_service }}"
     state: started
-    enabled: yes
+    enabled: true
   tags:
     - checkmk-server

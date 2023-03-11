@@ -13,23 +13,26 @@ ntp_timezone: "Europe/Lisbon"
 package_list:
   - gpg
 
-render_gid: 120000
-lxc_internal_render_gid: "{{ render_gid-100000|int|abs}}"
-
-## Host to LXC user
+## LXC user
 lxc_uid: 100000
 lxc_gid: "{{ lxc_uid }}"
 
-## Internal LXC
+## Render GID
+render_gid: 120000
+
+## Internal LXC root user
 internal_lxc_main_uid: "{{ lxc_uid-100000|int|abs}}"
 internal_lxc_main_gid: "{{ internal_lxc_main_uid }}"
+
+## Internal LXC render GID
+lxc_internal_render_gid: "{{ render_gid-100000|int|abs}}"
 
 # deev-docker-compose
 docker_uid: 0
 docker_gid: 0
 
 # Service domain
-default_domain: {{ domain_private }}
+default_domain: "{{ domain_private  }}"
 
 # Hosts
 hosts:

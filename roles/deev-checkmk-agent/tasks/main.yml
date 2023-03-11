@@ -23,5 +23,3 @@
   tags: checkmk-agent
   ansible.builtin.shell:
     cmd: "cmk-update-agent register -s {{ checkmk_server_host }} -i {{ checkmk_server_site }} -H {{ hostname }}.i.{{ default_domain }} -p http -U automation -S {{ checkmk_automation_secret }} -v"
-
-

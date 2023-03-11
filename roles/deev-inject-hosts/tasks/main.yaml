@@ -7,6 +7,7 @@
     dest: "/etc/hosts"
     owner: "root"
     group: "root"
+    mode: 0664
   become: true
 
 - name: create ignore.hosts file
@@ -14,3 +15,4 @@
   ansible.builtin.file:
     path: "/etc/.pve-ignore.hosts"
     state: touch
+    mode: 0664

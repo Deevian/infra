@@ -13,7 +13,6 @@ package_list:
 
 appdata_path: /mnt/appdata
 media_path: /mnt/media
-downloads_path: /mnt/downloads
 
 docker_compose_version: v2.16.0
 global_env_vars:
@@ -31,7 +30,11 @@ containers:
       - /dev/dri:/dev/dri
     volumes:
       - "{{ appdata_path }}/plex/config:/config"
-      - "{{ media_path }}:/mnt/media:ro"
+
+      - "{{ media_path }}/anime:/data/anime:ro"
+      - "{{ media_path }}/anime-movies:/data/anime-movies:ro"
+      - "{{ media_path }}/movies:/data/movies:ro"
+      - "{{ media_path }}/television:/data/television:ro"
     include_global_env_vars: true
     restart: unless-stopped
 
@@ -41,7 +44,7 @@ containers:
     network_mode: host
     volumes:
       - "{{ appdata_path }}/nzbget:/config"
-      - "{{ downloads_path }}:/downloads"
+      - "{{ media_path }}/downloads:/data/downloads"
     include_global_env_vars: true
     restart: unless-stopped
 
@@ -51,7 +54,7 @@ containers:
     network_mode: host
     volumes:
       - "{{ appdata_path }}/deluge:/config"
-      - "{{ downloads_path }}:/downloads"
+      - "{{ media_path }}/downloads:/data/downloads"
     include_global_env_vars: true
     restart: unless-stopped
 
@@ -70,8 +73,10 @@ containers:
     network_mode: host
     volumes:
       - "{{ appdata_path }}/radarr:/config"
-      - "{{ media_path }}:/mnt/media"
-      - "{{ downloads_path }}:/downloads"
+
+      - "{{ media_path }}/anime-movies:/data/anime-movies"
+      - "{{ media_path }}/movies:/data/movies"
+      - "{{ media_path }}/downloads:/data/downloads"
     include_global_env_vars: true
     restart: unless-stopped
 
@@ -81,8 +86,10 @@ containers:
     network_mode: host
     volumes:
       - "{{ appdata_path }}/sonarr:/config"
-      - "{{ media_path }}:/mnt/media"
-      - "{{ downloads_path }}:/downloads"
+
+      - "{{ media_path }}/anime:/data/anime"
+      - "{{ media_path }}/television:/data/television"
+      - "{{ media_path }}/downloads:/data/downloads"
     include_global_env_vars: true
     restart: unless-stopped
 
@@ -101,7 +108,11 @@ containers:
     network_mode: host
     volumes:
       - "{{ appdata_path }}/bazarr:/config"
-      - "{{ media_path }}:/mnt/media"
+
+      - "{{ media_path }}/anime:/data/anime"
+      - "{{ media_path }}/anime-movies:/data/anime-movies"
+      - "{{ media_path }}/movies:/data/movies"
+      - "{{ media_path }}/television:/data/television"
     include_global_env_vars: true
     restart: unless-stopped
 
@@ -121,7 +132,7 @@ containers:
     network_mode: host
     volumes:
       - "{{ appdata_path }}/notifiarr:/config"
-      - /var/run/utmp:/var/run/utmp
-      - /etc/machine-id:/etc/machine-id
+      - "/var/run/utmp:/var/run/utmp"
+      - "/etc/machine-id:/etc/machine-id:ro"
     include_global_env_vars: true
     restart: unless-stopped
