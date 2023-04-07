@@ -6,12 +6,20 @@
     - sanoid
   when: sanoid_build_from_source
 
+- name: configure sanoid
+  include_tasks: configure.yaml
+
 # todo remove this hack
 - name: ensure sanoid is installed
   apt:
     name: sanoid
     state: present
   ignore_errors: True
+
+- name: replication setup
+  include_tasks: replication.yaml
+  tags:
+    - replication
 
 - name: Give user passwordless access to ZFS commands
   lineinfile:

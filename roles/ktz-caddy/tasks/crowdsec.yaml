@@ -1,0 +1,10 @@
+---
+
+- name: install crowdsec repos
+  ansible.builtin.shell:
+    cmd: curl -s https://packagecloud.io/install/repositories/crowdsec/crowdsec/script.deb.sh | bash
+
+- name: install crowdsec
+  ansible.builtin.apt:
+    pkg: crowdsec
+    state: present

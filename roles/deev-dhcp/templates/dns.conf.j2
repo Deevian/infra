@@ -33,17 +33,6 @@ add-cpe-id={{ nextdns_cpe_id }}
 # Force the upstream servers to be used in order
 strict-order
 
-# Set the domain for dnsmasq
-domain={{ default_domain }},i.{{ default_domain }}
-
-# Add local-only domains here, queries in these domains are answered
-# from /etc/hosts or DHCP only.
-local=/{{ default_domain }}/
-local=/i.{{ default_domain }}/
-
-# Automatically add local domain to simple names
-expand-hosts
-
 # IPv4 range
 dhcp-range=10.10.1.100,10.10.1.250,24h
 

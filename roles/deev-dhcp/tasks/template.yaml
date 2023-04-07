@@ -23,7 +23,7 @@
 
 - name: write static dhcp file
   template:
-    src: /templates/static-dhcp.conf.j2
+    src: ../templates/static-dhcp.conf.j2
     dest: "{{ dnsmasq_config_dir }}/02-static-dhcp.conf"
     owner: root
     group: root

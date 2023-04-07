@@ -20,7 +20,7 @@ zfs create tank/fuse
 
 # Create host datasets
 zfs create rpool/appdata
-zfs create rpool/downlods
+zfs create rpool/downloads
 
 # Set host datasets mountpoints
 zfs set mountpoint=/mnt/nvme0n1/appdata rpool/appdata

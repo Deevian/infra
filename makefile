@@ -44,6 +44,24 @@ checkmk:
 	sleep 5
 	ansible-playbook -b run.yaml --limit checkmk
 
+## NEXTCLOUD
+nextcloud:
+	ansible-playbook -b run-lxc.yaml --limit proxmox --tags nextcloud
+	sleep 5
+	ansible-playbook -b run.yaml --limit nextcloud
+
+nextcloud-compose:
+	ansible-playbook -b run.yaml --limit nextcloud --tags compose
+
+## LOUNGE
+lounge:
+	ansible-playbook -b run-lxc.yaml --limit proxmox --tags lounge
+	sleep 5
+	ansible-playbook -b run.yaml --limit lounge
+
+lounge-compose:
+	ansible-playbook -b run.yaml --limit lounge --tags compose
+
 ## UTILS
 checkmk-agents:
 	ansible-playbook -b run.yaml --tags checkmk-agent

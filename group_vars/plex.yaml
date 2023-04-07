@@ -11,15 +11,10 @@ package_list:
   - gpg
   - python3-pip
 
+## ironicbadger.docker_compose_generator
 appdata_path: /mnt/appdata
 media_path: /mnt/media
-
-docker_compose_version: v2.16.0
-global_env_vars:
-  - "PUID={{ docker_uid }}"
-  - "PGID={{ docker_gid }}"
-  - "TZ={{ ntp_timezone }}"
-  - "UMASK=002"
+downloads_path: /mnt/downloads
 
 containers:
   - service_name: plex
@@ -35,18 +30,30 @@ containers:
       - "{{ media_path }}/anime-movies:/data/anime-movies:ro"
       - "{{ media_path }}/movies:/data/movies:ro"
       - "{{ media_path }}/television:/data/television:ro"
+      - "{{ downloads_path }}/transcode:/data/transcode"
     include_global_env_vars: true
     restart: unless-stopped
 
-  - service_name: nzbget
+  - service_name: jellyfin
     active: true
-    image: lscr.io/linuxserver/nzbget:latest
+    image: jellyfin/jellyfin:latest
     network_mode: host
+    devices:
+      - /dev/dri:/dev/dri
     volumes:
-      - "{{ appdata_path }}/nzbget:/config"
-      - "{{ media_path }}/downloads:/data/downloads"
+      - "{{ appdata_path }}/jellyfin:/config"
+
+      - "{{ media_path }}/anime:/data/anime:ro"
+      - "{{ media_path }}/anime-movies:/data/anime-movies:ro"
+      - "{{ media_path }}/movies:/data/movies:ro"
+      - "{{ media_path }}/television:/data/television:ro"
+      - "{{ downloads_path }}/transcode:/cache"
     include_global_env_vars: true
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 4000M
 
   - service_name: deluge
     active: true
@@ -54,7 +61,8 @@ containers:
     network_mode: host
     volumes:
       - "{{ appdata_path }}/deluge:/config"
-      - "{{ media_path }}/downloads:/data/downloads"
+      - "{{ downloads_path }}/torrents:/data/downloads"
+      - "{{ media_path }}/downloads-completed:/data/downloads-completed"
     include_global_env_vars: true
     restart: unless-stopped
 
@@ -73,10 +81,7 @@ containers:
     network_mode: host
     volumes:
       - "{{ appdata_path }}/radarr:/config"
-
-      - "{{ media_path }}/anime-movies:/data/anime-movies"
-      - "{{ media_path }}/movies:/data/movies"
-      - "{{ media_path }}/downloads:/data/downloads"
+      - "{{ media_path }}:/data"
     include_global_env_vars: true
     restart: unless-stopped
 
@@ -86,10 +91,7 @@ containers:
     network_mode: host
     volumes:
       - "{{ appdata_path }}/sonarr:/config"
-
-      - "{{ media_path }}/anime:/data/anime"
-      - "{{ media_path }}/television:/data/television"
-      - "{{ media_path }}/downloads:/data/downloads"
+      - "{{ media_path }}:/data"
     include_global_env_vars: true
     restart: unless-stopped
 
@@ -108,11 +110,7 @@ containers:
     network_mode: host
     volumes:
       - "{{ appdata_path }}/bazarr:/config"
-
-      - "{{ media_path }}/anime:/data/anime"
-      - "{{ media_path }}/anime-movies:/data/anime-movies"
-      - "{{ media_path }}/movies:/data/movies"
-      - "{{ media_path }}/television:/data/television"
+      - "{{ media_path }}:/data"
     include_global_env_vars: true
     restart: unless-stopped
 
@@ -136,3 +134,19 @@ containers:
       - "/etc/machine-id:/etc/machine-id:ro"
     include_global_env_vars: true
     restart: unless-stopped
+
+  - service_name: sabnzbd
+    active: true
+    image: lscr.io/linuxserver/sabnzbd:latest
+    network_mode: host
+    volumes:
+      - "{{ appdata_path }}/init-files/sabnzbd:/custom-cont-init.d:ro"
+      - "{{ appdata_path }}/sabnzbd:/config"
+      - "{{ downloads_path }}/usenet:/data/usenet"
+      - "{{ media_path }}/downloads-completed:/data/downloads-completed"
+    include_global_env_vars: true
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '6'

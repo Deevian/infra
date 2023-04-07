@@ -1,0 +1,46 @@
+---
+
+hostname: "{{ hosts.nextcloud.hostname }}"
+hostname_nextcloud: "{{ hostname }}"
+
+## deev-pkg
+package_list:
+  - gpg
+  - python3-pip
+
+## deev-checkmk-agent
+checkmk_agent_hash: afb596b83bfbad40
+
+## ironicbadger.docker_compose_generator
+appdata_path: /mnt/appdata
+data_path: /mnt/data
+
+containers:
+  - service_name: mariadb
+    active: true
+    image: mariadb:latest
+    command: "--transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW"
+    network_mode: host
+    volumes:
+      - "{{ appdata_path }}/db:/var/lib/mysql"
+    include_global_env_vars: true
+    restart: unless-stopped
+    environment:
+      - "MYSQL_ROOT_PASSWORD={{ nextcloud_db_root_password }}"
+      - "MYSQL_PASSWORD={{ nextcloud_db_user_password }}"
+      - "MYSQL_DATABASE=nextcloud"
+      - "MYSQL_USER=nextcloud"
+  - service_name: nextcloud
+    active: true
+    image: nextcloud:latest
+    network_mode: host
+    volumes:
+      - "{{ appdata_path }}/nextcloud:/var/www/html"
+      - "{{ data_path }}/:/data"
+    include_global_env_vars: true
+    restart: unless-stopped
+    environment:
+      - "MYSQL_PASSWORD={{ nextcloud_db_user_password }}"
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_HOST={{ hosts.nextcloud.ip }}

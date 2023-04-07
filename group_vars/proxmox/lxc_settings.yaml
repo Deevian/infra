@@ -3,7 +3,7 @@
 ## deev-lxc
 lxc_api_node: "{{ hostname_proxmox }}"
 lxc_api_host: "{{ hosts.proxmox.ip }}"
-lxc_default_os_template: "local:vztmpl/ubuntu-22.10-standard_22.10-1_amd64.tar.zst"
+lxc_default_os_template: "local:vztmpl/ubuntu-22.04-standard_22.04-1_amd64.tar.zst"
 lxc_default_storage: "local-zfs"
 lxc_default_network_gateway: "{{ hosts.gateway.ip }}"
 lxc_default_nameserver: "{{ hosts.dnsmasq.ip }}"
@@ -49,9 +49,12 @@ lxc_list:
     hwaddr: "{{ hosts.caddy.mac }}"
     mounts: |-
       {
-        "mp0":"/mnt/appdata/caddy,mp=/mnt/appdata/caddy"
+        "mp0":"/mnt/appdata/caddy,mp=/mnt/appdata/caddy",
+        "mp1":"/mnt/appdata/www-data/,mp=/mnt/www-data/",
+        "mp2":"/mnt/appdata/crowdsec-etc,mp=/etc/crowdsec",
+        "mp3":"/mnt/appdata/crowdsec-var,mp=/var/lib/crowdsec",
       }
-    diskGB: 2
+    diskGB: 2.5
     unprivileged: true
 
   samba:
@@ -62,6 +65,7 @@ lxc_list:
     mounts: |-
       {
         "mp0":"/mnt/media/,mp=/mnt/media/",
+        "mp1":"/mnt/downloads/,mp=/mnt/downloads/",
         "mp2":"/mnt/appdata/,mp=/mnt/appdata/",
         "mp3":"/mnt/data/,mp=/mnt/data/"
       }
@@ -77,6 +81,7 @@ lxc_list:
       {
         "mp0":"/mnt/media/,mp=/mnt/media/",
         "mp1":"/mnt/appdata/plex/,mp=/mnt/appdata/",
+        "mp2":"/mnt/downloads/,mp=/mnt/downloads/",
         "mp3":"/dev/zvol/rpool/docker,mp=/var/lib/docker/,backup=0"
       }
     diskGB: 2
@@ -97,4 +102,34 @@ lxc_list:
         "mp0":"/mnt/appdata/checkmk,mp=/backup"
       }
     diskGB: 4
+    unprivileged: true
+
+  nextcloud:
+    hostname: "{{ hosts.nextcloud.hostname }}"
+    vmid: 1005
+    ip: "{{ hosts.nextcloud.ip }}/24"
+    hwaddr: "{{ hosts.nextcloud.mac }}"
+    mounts: |-
+      {
+        "mp0":"/mnt/appdata/nextcloud/,mp=/mnt/appdata/",
+        "mp1":"/mnt/data/,mp=/mnt/data/",
+        "mp2":"/dev/zvol/rpool/docker-nextcloud,mp=/var/lib/docker/,backup=0"
+      }
+    diskGB: 2
+    features: "nesting=1"
+    unprivileged: true
+
+  lounge:
+    hostname: "{{ hosts.lounge.hostname }}"
+    vmid: 1006
+    ip: "{{ hosts.lounge.ip }}/24"
+    hwaddr: "{{ hosts.lounge.mac }}"
+    mounts: |-
+      {
+        "mp0":"/mnt/appdata/lounge/,mp=/mnt/appdata/",
+        "mp1":"/mnt/appdata/www-data/lounge/,mp=/mnt/www-data/",
+        "mp2":"/dev/zvol/rpool/docker-lounge,mp=/var/lib/docker/,backup=0"
+      }
+    diskGB: 2
+    features: "nesting=1"
     unprivileged: true

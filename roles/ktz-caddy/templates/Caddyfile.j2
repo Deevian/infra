@@ -1,10 +1,18 @@
 {
-    email {{ gmail_address }}
-    log {
-        output file /var/log/caddy/default.access.log
-    }
+	email {{ gmail_address }}
+	log {
+		output file /var/log/caddy/default.access.log
+	}
 
-    acme_dns cloudflare {{ cloudflare_auth_token }}
+	acme_dns cloudflare {{ cloudflare_auth_token }}
+
+	crowdsec {
+		api_key {{ crowdsec_api_key }}
+	}
+
+	servers {
+		trusted_proxies cloudflare
+	}
 }
 
 import {{ caddy_linux_caddyfile_path }}/*.caddy

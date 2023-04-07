@@ -18,8 +18,16 @@ plex.{{ default_domain }} {
     reverse_proxy {{ hosts.plex.ip }}:32400
 }
 
+jellyfin.{{ default_domain }} {
+    reverse_proxy {{ hosts.plex.ip }}:8096
+}
+
 nzbget.{{ default_domain }} {
     reverse_proxy {{ hosts.plex.ip }}:6789
+}
+
+sabnzbd.{{ default_domain }} {
+    reverse_proxy {{ hosts.plex.ip }}:8080
 }
 
 deluge.{{ default_domain }} {
@@ -52,4 +60,28 @@ tautulli.{{ default_domain }} {
 
 notifiarr.{{ default_domain }} {
     reverse_proxy {{ hosts.plex.ip }}:5454
+}
+
+nextcloud.{{ default_domain }} {
+    redir /.well-known/carddav /remote.php/dav 301
+    redir /.well-known/caldav /remote.php/dav 301
+
+    header {
+        Strict-Transport-Security max-age=15552000;
+    }
+
+    reverse_proxy {{ hosts.nextcloud.ip }}:80
+}
+
+ghost.lounge.{{ default_domain }} {
+    reverse_proxy {{ hosts.lounge.ip }}:2368
+}
+
+drone.lounge.{{ default_domain }} {
+    reverse_proxy {{ hosts.lounge.ip }}:80
+}
+
+
+mtomo.lounge.{{ default_domain }} {
+    reverse_proxy {{ hosts.lounge.ip }}:8080
 }

@@ -3,8 +3,11 @@
 hostname: "{{ hosts.caddy.hostname }}"
 hostname_caddy: "{{ hostname }}"
 
-caddy_data_path: /mnt/appdata
-
-# deev-pkg
+## deev-pkg
 package_list:
   - golang
+  - curl
+
+## ktz-caddy
+caddy_data_path: /mnt/appdata
+crowdsec: true

@@ -15,7 +15,7 @@ samba_shares:
     valid_users: "{{ main_username }}"
     owner: "{{ main_username }}"
     group: "{{ main_username }}"
-    read_only: no
+    read_only: false
   - name: data
     browseable: true
     path: /mnt/data
@@ -23,15 +23,15 @@ samba_shares:
     valid_users: "{{ main_username }}"
     owner: "{{ main_username }}"
     group: "{{ main_username }}"
-    read_only: no
+    read_only: false
   - name: downloads
     browseable: true
-    path: /mnt/media/downloads
+    path: /mnt/downloads
     write_list: "{{ main_username }}"
     valid_users: "{{ main_username }}"
     owner: "{{ main_username }}"
     group: "{{ main_username }}"
-    read_only: no
+    read_only: false
   - name: appdata
     browseable: true
     path: /mnt/appdata
@@ -39,4 +39,4 @@ samba_shares:
     valid_users: "{{ main_username }}"
     owner: "{{ main_username }}"
     group: "{{ main_username }}"
-    read_only: no
+    read_only: false

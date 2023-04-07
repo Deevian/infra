@@ -6,10 +6,10 @@ target_os: ubuntu
 main_username: root
 main_groupname: "{{ main_username }}"
 
-# Timezone
+## Timezone
 ntp_timezone: "Europe/Lisbon"
 
-# deev-pkg
+## deev-pkg
 package_list:
   - gpg
 
@@ -27,27 +27,41 @@ internal_lxc_main_gid: "{{ internal_lxc_main_uid }}"
 ## Internal LXC render GID
 lxc_internal_render_gid: "{{ render_gid-100000|int|abs}}"
 
-# deev-docker-compose
+## deev-docker-compose
 docker_uid: 0
 docker_gid: 0
 
-# Service domain
-default_domain: "{{ domain_private  }}"
+## Service domain
+default_domain: "{{ domain_private }}"
 
-# Hosts
+## Hosts
 hosts:
-  dnsmasq:    {mac: 22:36:5f:87:03:9a, ip: 10.10.1.11,  hostname: dnsmasq, ip6: "{{ dnsmasq_ipv6 }}"}
-  gateway:    {mac: cc:19:a8:fa:4c:3f, ip: 10.10.1.254, hostname: gateway}
   proxmox:    {mac: d8:bb:c1:dd:f3:cf, ip: 10.10.1.10,  hostname: proxmox}
+  dnsmasq:    {mac: 22:36:5f:87:03:9a, ip: 10.10.1.11,  hostname: dnsmasq, ip6: "{{ dnsmasq_ipv6 }}"}
   tailscale:  {mac: da:07:5f:33:dc:74, ip: 10.10.1.12,  hostname: tailscale}
   caddy:      {mac: f6:a2:69:61:94:8d, ip: 10.10.1.100, hostname: caddy}
   samba:      {mac: e6:30:34:33:36:89, ip: 10.10.1.101, hostname: samba}
   plex:       {mac: 3e:22:bd:64:39:9e, ip: 10.10.1.102, hostname: plex}
   checkmk:    {mac: 26:fa:d5:b9:1a:b0, ip: 10.10.1.103, hostname: checkmk}
+  nextcloud:  {mac: 7a:aa:ec:4a:80:f0, ip: 10.10.1.104, hostname: nextcloud}
+  lounge:     {mac: 16:2a:34:bf:62:9d, ip: 10.10.1.105, hostname: lounge}
+  gateway:    {mac: cc:19:a8:fa:4c:3f, ip: 10.10.1.254, hostname: gateway}
 
-# deev-checkmk-agent
+## deev-checkmk-agent
 checkmk_server_site: home
 checkmk_server_host: "{{ hosts.checkmk.hostname }}.i.{{ default_domain }}"
 
-# deev-checkmk-agent // shared with most containers
+## deev-checkmk-agent // shared with most containers
 checkmk_agent_hash: 92cf5b6bac7a33c7
+
+## geerlingguy.docker // log rotation
+docker_daemon_options:
+  log-driver: "local"
+
+## ironicbadger.docker_compose_generator
+docker_compose_version: v2.16.0
+global_env_vars:
+  - "PUID={{ docker_uid }}"
+  - "PGID={{ docker_gid }}"
+  - "TZ={{ ntp_timezone }}"
+  - "UMASK=002"

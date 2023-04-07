@@ -5,7 +5,7 @@ target_os: debian
 hostname: "{{ hosts.proxmox.hostname }}"
 hostname_proxmox: "{{ hostname }}"
 
-# deev-checkmk-agent
+## deev-checkmk-agent
 checkmk_agent_hash: ac63a133f846b607
 
 ## deev-pkg
@@ -52,11 +52,21 @@ snapraid_config_excludes:
 ## ktz-sanoid
 sanoid_build_from_source: true
 sanoid_config_source: sanoid-proxmox.conf
+syncoid_cron_jobs:
+  - { job: "{{ syncoid_binary_path }} rpool/appdata tank/backups/appdata", name: "appdata backup", weekday: "*", hour: "6" }
+  - { job: "{{ syncoid_binary_path }} rpool/ROOT/pve-1 tank/backups/pve-1", name: "pve backup", weekday: "*", hour: "6" }
 
 # deev-proxmox
 proxmox_main_storage_path:
 extra_mountpoints:
   - { path: "/mnt/storage" }
+  - {
+      path: "/mnt/downloads",
+      diskbyid: /dev/disk/by-id/nvme-Samsung_SSD_970_EVO_Plus_500GB_S4EVNM0TC07249N-part1,
+      fs: xfs,
+      opts: defaults,
+      content: true
+    }
 
 # ironicbadger.snapraid
 snapraid_runner: true

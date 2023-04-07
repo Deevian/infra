@@ -17,10 +17,10 @@
   tags: config
 
 - name: template config files into place
-  include_tasks: template.yaml
+  import_tasks: template.yaml
   tags: config
 
 - name: restart dnsmasq
   ansible.builtin.shell:
     cmd: "systemctl restart dnsmasq"
-    tags: config
+  tags: config

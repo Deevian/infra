@@ -4,7 +4,6 @@
     vars_files:
       - 'vars/vault.yaml'
     roles:
-      - role: deev-inject-hosts
       - role: deev-pkg
       - role: ironicbadger.figurine
       - role: ironicbadger.hddtemp
@@ -51,7 +50,9 @@
       - name: install python docker for checkmk
         tags: checkmkagent
         ansible.builtin.pip:
-          name: docker
+          name:
+            - docker
+            - python-docker
 
   - hosts: dnsmasq
     vars_files:
@@ -68,3 +69,37 @@
       - role: deev-pkg
       - role: deev-checkmk-server
       - role: deev-checkmk-agent
+
+  - hosts: nextcloud
+    vars_files:
+      - 'vars/vault.yaml'
+    roles:
+      - role: deev-pkg
+      - role: geerlingguy.docker
+      - role: deev-docker-compose
+        tags: compose
+      - role: deev-checkmk-agent
+    tasks:
+      - name: install python docker for checkmk
+        tags: checkmkagent
+        ansible.builtin.pip:
+          name:
+            - docker
+            - python-docker
+
+  - hosts: lounge
+    vars_files:
+      - 'vars/vault.yaml'
+    roles:
+      - role: deev-pkg
+      - role: geerlingguy.docker
+      - role: deev-docker-compose
+        tags: compose
+      - role: deev-checkmk-agent
+    tasks:
+      - name: install python docker for checkmk
+        tags: checkmkagent
+        ansible.builtin.pip:
+          name:
+            - docker
+            - python-docker

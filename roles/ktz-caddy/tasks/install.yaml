@@ -6,7 +6,7 @@
 
 - name: build caddy
   ansible.builtin.shell:
-    cmd: xcaddy build latest --with github.com/caddy-dns/cloudflare --output /usr/local/bin/caddy
+    cmd: xcaddy build latest --with github.com/caddy-dns/cloudflare --with github.com/WeidiDeng/caddy-cloudflare-ip --with github.com/hslatman/caddy-crowdsec-bouncer --output /usr/local/bin/caddy
 
 - name: create caddy config folder
   ansible.builtin.file:

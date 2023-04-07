@@ -56,11 +56,3 @@
     - sleepymutex
   become: true
   ignore_errors: true
-
-- name: configure sanoid
-  copy:
-    src: "sanoid/{{ sanoid_config_source }}"
-    dest: /etc/sanoid/sanoid.conf
-    owner: root
-    group: root
-    mode: '0644'

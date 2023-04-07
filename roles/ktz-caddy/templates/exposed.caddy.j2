@@ -14,6 +14,14 @@ stream.{{ domain }} {
     reverse_proxy {{ hosts.plex.ip }}:32400
 }
 
+jellyfin.{{ domain }} {
+    log {
+        output file /var/log/caddy/jellyfin.access.log
+    }
+
+    reverse_proxy {{ hosts.plex.ip }}:8096
+}
+
 overseerr.{{ domain }} {
     log {
         output file /var/log/caddy/overserr.access.log
@@ -28,4 +36,46 @@ notifiarr.{{ domain }} {
     }
 
     reverse_proxy {{ hosts.plex.ip }}:5454
+}
+
+e.{{ domain_blog }} {
+    rewrite * /matomo.php
+
+    log {
+        output file /var/log/caddy/matomo.access.log
+    }
+
+    reverse_proxy {{ hosts.lounge.ip }}:8080
+}
+
+{{ domain_blog }} {
+    file_server
+    root * /mnt/www-data/lounge/opontolaranja
+    encode gzip
+
+    log {
+        output file /var/log/caddy/blog.access.log
+    }
+
+    header {
+        Cache-Control max-age=1
+    }
+}
+
+drone.{{ domain_deev }} {
+    log {
+        output file /var/log/caddy/drone.access.log
+    }
+
+    reverse_proxy {{ hosts.lounge.ip }}:80
+}
+
+{{ domain_deev }} {
+    file_server
+    root * /mnt/www-data/lounge/deev.io
+    encode gzip
+
+    log {
+        output file /var/log/caddy/deev.access.log
+    }
 }
