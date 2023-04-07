@@ -7,7 +7,7 @@
     api_password: "{{ lxc_api_password }}"
     api_host: "{{ lxc_api_host }}"
     state: stopped
-  ignore_errors: true
+  failed_when:
   tags:
     - "{{ item.key }}"
     - stop
@@ -19,7 +19,7 @@
     api_password: "{{ lxc_api_password }}"
     api_host: "{{ lxc_api_host }}"
     state: absent
-  ignore_errors: true
+  failed_when:
   tags:
     - "{{ item.key }}"
     - destroy

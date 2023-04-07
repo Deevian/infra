@@ -10,7 +10,7 @@
 
 - name: stop systemd-resolve
   ansible.builtin.shell:
-    cmd: "service systemd-resolved stop"
+    cmd: "systemctl stop systemd-resolved"
 
 - name: check for duplicated items
   import_tasks: duplicate_checks.yaml

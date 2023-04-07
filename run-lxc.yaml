@@ -1,7 +1,7 @@
 ---
 
-  - hosts: proxmox
-    vars_files:
-      - 'vars/vault.yaml'
-    roles:
-      - role: deev-lxc
+- hosts: proxmox
+  vars_files:
+    - 'vars/vault.yaml'
+  roles:
+    - role: deev-lxc

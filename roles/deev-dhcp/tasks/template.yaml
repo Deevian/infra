@@ -16,28 +16,28 @@
 
 - name: write dns file
   template:
-    src: ../templates/dns.conf.j2
+    src: dns.conf.j2
     dest: "{{ dnsmasq_config_dir }}/01-dns.conf"
     owner: root
     group: root
 
 - name: write static dhcp file
   template:
-    src: ../templates/static-dhcp.conf.j2
+    src: static-dhcp.conf.j2
     dest: "{{ dnsmasq_config_dir }}/02-static-dhcp.conf"
     owner: root
     group: root
 
 - name: write dns overrides file
   template:
-    src: ../templates/dns-overrides.conf.j2
+    src: dns-overrides.conf.j2
     dest: "{{ dnsmasq_config_dir }}/03-dns-overrides.conf"
     owner: root
     group: root
 
 - name: write resolv.conf
   template:
-    src: ../templates/resolv.conf.j2
+    src: resolv.conf.j2
     dest: "/etc/resolv.conf"
     owner: root
     group: root

@@ -53,13 +53,14 @@ snapraid_config_excludes:
 sanoid_build_from_source: true
 sanoid_config_source: sanoid-proxmox.conf
 syncoid_cron_jobs:
-  - { job: "{{ syncoid_binary_path }} rpool/appdata tank/backups/appdata", name: "appdata backup", weekday: "*", hour: "6" }
-  - { job: "{{ syncoid_binary_path }} rpool/ROOT/pve-1 tank/backups/pve-1", name: "pve backup", weekday: "*", hour: "6" }
+  - {job: "{{ syncoid_binary_path }} rpool/appdata tank/backups/appdata", name: "appdata backup", weekday: "*", hour: "6"}
+  - {job: "{{ syncoid_binary_path }} rpool/ROOT/pve-1 tank/backups/pve-1", name: "pve backup", weekday: "*", hour: "6"}
 
 # deev-proxmox
 proxmox_main_storage_path:
 extra_mountpoints:
-  - { path: "/mnt/storage" }
+  # yamllint disable rule:indentation
+  - {path: "/mnt/storage"}
   - {
       path: "/mnt/downloads",
       diskbyid: /dev/disk/by-id/nvme-Samsung_SSD_970_EVO_Plus_500GB_S4EVNM0TC07249N-part1,
@@ -67,12 +68,14 @@ extra_mountpoints:
       opts: defaults,
       content: true
     }
+# yamllint enable rule:indentation
 
 # ironicbadger.snapraid
 snapraid_runner: true
 snapraid_bin_path: /usr/bin/snapraid
 
 snapraid_parity_disks:
+  # yamllint disable rule:indentation
   - {
       path: /mnt/parity-disks/disk-1,
       diskbyid: /dev/disk/by-id/ata-ST18000NM000J-2TV103_ZR5DTXYF-part1,
@@ -80,8 +83,10 @@ snapraid_parity_disks:
       opts: defaults,
       content: true
     }
+# yamllint enable rule:indentation
 
 snapraid_data_disks:
+  # yamllint disable rule:indentation
   - {
       path: /mnt/media-disks/disk-1,
       diskbyid: /dev/disk/by-id/ata-ST18000NM000J-2TV103_ZR5DTKW5-part1,
@@ -96,8 +101,10 @@ snapraid_data_disks:
       opts: defaults,
       content: true
     }
+# yamllint enable rule:indentation
 
 fstab_mergerfs:
+  # yamllint disable rule:indentation
   - {
       source: "/mnt/media-disks/*:/mnt/data",
       mountpoint: "/mnt/storage",
@@ -110,14 +117,17 @@ fstab_mergerfs:
       fs: fuse.mergerfs,
       opts: "defaults,nonempty,allow_other,use_ino,moveonenospc=true,category.create=mspmfs,dropcacheonclose=true,minfreespace=250G,fsname=jbod"
     }
+# yamllint enable rule:indentation
 
 snapraid_runner_cron_jobs:
+  # yamllint disable rule:indentation
   - {
       job: '{{ snapraid_runner_command }}',
       name: 'snapraid_runner',
       weekday: '*',
       hour: '04'
     }
+# yamllint enable rule:indentation
 
 snapraid_scrub_percent: 3
 snapraid_scrub_age: 30

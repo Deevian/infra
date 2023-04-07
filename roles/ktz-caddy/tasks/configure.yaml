@@ -28,6 +28,6 @@
 - name: enable caddy service
   ansible.builtin.systemd:
     name: caddy
-    enabled: yes
+    enabled: true
     state: reloaded
-    daemon_reload: yes
+    daemon_reload: true

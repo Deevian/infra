@@ -36,6 +36,7 @@ default_domain: "{{ domain_private }}"
 
 ## Hosts
 hosts:
+  # yamllint disable rule:colons rule:commas
   proxmox:    {mac: d8:bb:c1:dd:f3:cf, ip: 10.10.1.10,  hostname: proxmox}
   dnsmasq:    {mac: 22:36:5f:87:03:9a, ip: 10.10.1.11,  hostname: dnsmasq, ip6: "{{ dnsmasq_ipv6 }}"}
   tailscale:  {mac: da:07:5f:33:dc:74, ip: 10.10.1.12,  hostname: tailscale}
@@ -46,6 +47,7 @@ hosts:
   nextcloud:  {mac: 7a:aa:ec:4a:80:f0, ip: 10.10.1.104, hostname: nextcloud}
   lounge:     {mac: 16:2a:34:bf:62:9d, ip: 10.10.1.105, hostname: lounge}
   gateway:    {mac: cc:19:a8:fa:4c:3f, ip: 10.10.1.254, hostname: gateway}
+  # yamllint enable rule:colons rule:commas
 
 ## deev-checkmk-agent
 checkmk_server_site: home

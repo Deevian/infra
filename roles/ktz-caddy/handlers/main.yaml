@@ -4,4 +4,4 @@
   service:
     name: caddy
     state: restarted
-    enabled: yes
+    enabled: true

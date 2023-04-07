@@ -11,29 +11,29 @@ package_list:
 dnsmasq_config_dir: /etc/dnsmasq/dnsmasq.d
 
 dns_overrides:
-  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "gateway.{{ default_domain }}" }
-  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "proxmox.{{ default_domain }}" }
-  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "checkmk.{{ default_domain }}" }
+  - {ip: "{{ hosts.caddy.ip }}", custom_dns: "gateway.{{ default_domain }}"}
+  - {ip: "{{ hosts.caddy.ip }}", custom_dns: "proxmox.{{ default_domain }}"}
+  - {ip: "{{ hosts.caddy.ip }}", custom_dns: "checkmk.{{ default_domain }}"}
 
-  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "plex.{{ default_domain }}" }
-  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "jellyfin.{{ default_domain }}" }
-  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "radarr.{{ default_domain }}" }
-  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "bazarr.{{ default_domain }}" }
-  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "sonarr.{{ default_domain }}" }
-  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "nzbget.{{ default_domain }}" }
-  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "sabnzbd.{{ default_domain }}" }
-  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "deluge.{{ default_domain }}" }
-  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "overseerr.{{ default_domain }}" }
-  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "notifiarr.{{ default_domain }}" }
-  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "prowlarr.{{ default_domain }}" }
-  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "tautulli.{{ default_domain }}" }
-  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "nextcloud.{{ default_domain }}" }
-  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "ghost.lounge.{{ default_domain }}" }
-  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "drone.lounge.{{ default_domain }}" }
-  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "mtomo.lounge.{{ default_domain }}" }
+  - {ip: "{{ hosts.caddy.ip }}", custom_dns: "plex.{{ default_domain }}"}
+  - {ip: "{{ hosts.caddy.ip }}", custom_dns: "jellyfin.{{ default_domain }}"}
+  - {ip: "{{ hosts.caddy.ip }}", custom_dns: "radarr.{{ default_domain }}"}
+  - {ip: "{{ hosts.caddy.ip }}", custom_dns: "bazarr.{{ default_domain }}"}
+  - {ip: "{{ hosts.caddy.ip }}", custom_dns: "sonarr.{{ default_domain }}"}
+  - {ip: "{{ hosts.caddy.ip }}", custom_dns: "nzbget.{{ default_domain }}"}
+  - {ip: "{{ hosts.caddy.ip }}", custom_dns: "sabnzbd.{{ default_domain }}"}
+  - {ip: "{{ hosts.caddy.ip }}", custom_dns: "deluge.{{ default_domain }}"}
+  - {ip: "{{ hosts.caddy.ip }}", custom_dns: "overseerr.{{ default_domain }}"}
+  - {ip: "{{ hosts.caddy.ip }}", custom_dns: "notifiarr.{{ default_domain }}"}
+  - {ip: "{{ hosts.caddy.ip }}", custom_dns: "prowlarr.{{ default_domain }}"}
+  - {ip: "{{ hosts.caddy.ip }}", custom_dns: "tautulli.{{ default_domain }}"}
+  - {ip: "{{ hosts.caddy.ip }}", custom_dns: "nextcloud.{{ default_domain }}"}
+  - {ip: "{{ hosts.caddy.ip }}", custom_dns: "ghost.lounge.{{ default_domain }}"}
+  - {ip: "{{ hosts.caddy.ip }}", custom_dns: "drone.lounge.{{ default_domain }}"}
+  - {ip: "{{ hosts.caddy.ip }}", custom_dns: "mtomo.lounge.{{ default_domain }}"}
 
   ## Overrides Cloudflare block rule
-  - { ip: "{{ hosts.caddy.ip }}", custom_dns: "drone.{{ domain_deev }}" }
+  - {ip: "{{ hosts.caddy.ip }}", custom_dns: "drone.{{ domain_deev }}"}
 
 dhcp_reservations:
   - "{{ hosts.proxmox }}"

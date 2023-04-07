@@ -5,16 +5,16 @@
     name: "{{ hostname_caddy }}"
 
 - name: install crowdsec
-  include_tasks:
+  import_tasks:
     file: crowdsec.yaml
   when: crowdsec
 
 - name: install caddy
-  include_tasks:
+  import_tasks:
     file: install.yaml
 
 - name: configure caddy rules
   import_tasks:
     file: configure.yaml
   tags:
-  - config
+    - config

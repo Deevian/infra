@@ -6,9 +6,9 @@
     job: "{{ item.job }}"
     name: "{{ item.name }}"
     weekday: "{{ item.weekday | default ('*') }}"
-    minute: "{{ item.minute | default ('00')}}"
+    minute: "{{ item.minute | default ('00') }}"
     hour: "{{ item.hour | default ('00') }}"
-    dom: "{{ item.dom|default('*') }}"
+    dom: "{{ item.dom | default('*') }}"
   with_items:
     - "{{ syncoid_cron_jobs }}"
   when: syncoid_cron
