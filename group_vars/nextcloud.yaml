@@ -30,6 +30,7 @@ containers:
       - "MYSQL_PASSWORD={{ nextcloud_db_user_password }}"
       - "MYSQL_DATABASE=nextcloud"
       - "MYSQL_USER=nextcloud"
+
   - service_name: nextcloud
     active: true
     image: nextcloud:latest
@@ -44,3 +45,13 @@ containers:
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
       - MYSQL_HOST={{ hosts.nextcloud.ip }}
+      - REDIS_HOST={{ hosts.nextcloud.ip }}
+
+  - service_name: redis
+    active: true
+    image: redis:alpine
+    network_mode: host
+    volumes:
+      - "{{ appdata_path }}/redis:/data"
+    include_global_env_vars: true
+    restart: unless-stopped
