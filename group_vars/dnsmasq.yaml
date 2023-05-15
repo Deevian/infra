@@ -27,9 +27,7 @@ dns_overrides:
   - {ip: "{{ hosts.caddy.ip }}", custom_dns: "notifiarr.{{ default_domain }}"}
   - {ip: "{{ hosts.caddy.ip }}", custom_dns: "prowlarr.{{ default_domain }}"}
   - {ip: "{{ hosts.caddy.ip }}", custom_dns: "tautulli.{{ default_domain }}"}
-  - {ip: "{{ hosts.caddy.ip }}", custom_dns: "nextcloud.{{ default_domain }}"}
   - {ip: "{{ hosts.caddy.ip }}", custom_dns: "ghost.lounge.{{ default_domain }}"}
-  - {ip: "{{ hosts.caddy.ip }}", custom_dns: "drone.lounge.{{ default_domain }}"}
   - {ip: "{{ hosts.caddy.ip }}", custom_dns: "mtomo.lounge.{{ default_domain }}"}
 
   ## Overrides Cloudflare block rule

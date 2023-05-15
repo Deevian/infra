@@ -8,9 +8,6 @@ package_list:
   - gpg
   - python3-pip
 
-## deev-checkmk-agent
-checkmk_agent_hash: afb596b83bfbad40
-
 ## ironicbadger.docker_compose_generator
 appdata_path: /mnt/appdata
 data_path: /mnt/data
@@ -20,9 +17,8 @@ containers:
     active: true
     image: mariadb:latest
     command: "--transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW"
-    network_mode: host
     volumes:
-      - "{{ appdata_path }}/db:/var/lib/mysql"
+      - "{{ appdata_path }}/db:/var/lib/mysql:Z"
     include_global_env_vars: true
     restart: unless-stopped
     environment:
@@ -30,28 +26,42 @@ containers:
       - "MYSQL_PASSWORD={{ nextcloud_db_user_password }}"
       - "MYSQL_DATABASE=nextcloud"
       - "MYSQL_USER=nextcloud"
+      - "MARIADB_AUTO_UPGRADE=1"
+      - "MARIADB_DISABLE_UPGRADE_BACKUP=1"
+
+  - service_name: redis
+    active: true
+    image: redis:alpine
+    include_global_env_vars: true
+    restart: unless-stopped
 
   - service_name: nextcloud
     active: true
-    image: nextcloud:latest
-    network_mode: host
+    image: nextcloud:fpm
     volumes:
-      - "{{ appdata_path }}/nextcloud:/var/www/html"
+      - "{{ appdata_path }}/nextcloud:/var/www/html:z"
       - "{{ data_path }}/:/data"
     include_global_env_vars: true
     restart: unless-stopped
     environment:
       - "MYSQL_PASSWORD={{ nextcloud_db_user_password }}"
-      - MYSQL_DATABASE=nextcloud
-      - MYSQL_USER=nextcloud
-      - MYSQL_HOST={{ hosts.nextcloud.ip }}
-      - REDIS_HOST={{ hosts.nextcloud.ip }}
+      - "MYSQL_DATABASE=nextcloud"
+      - "MYSQL_USER=nextcloud"
+      - "MYSQL_HOST=mariadb"
+      - "REDIS_HOST=redis"
+    depends_on:
+      - mariadb
+      - redis
 
-  - service_name: redis
+  - service_name: nginx
     active: true
-    image: redis:alpine
-    network_mode: host
+    image: nginx:alpine
     volumes:
-      - "{{ appdata_path }}/redis:/data"
+      - "{{ appdata_path }}/nextcloud:/var/www/html:z,ro"
+      - "{{ appdata_path }}/nginx.conf:/etc/nginx/nginx.conf:z,ro"
     include_global_env_vars: true
     restart: unless-stopped
+    depends_on:
+      - nextcloud
+    ports:
+      - 80:80

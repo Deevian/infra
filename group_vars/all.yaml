@@ -51,7 +51,7 @@ hosts:
 
 ## deev-checkmk-agent
 checkmk_server_site: home
-checkmk_server_host: "{{ hosts.checkmk.hostname }}.i.{{ default_domain }}"
+checkmk_server_host: "{{ hosts.checkmk.ip }}"
 
 ## deev-checkmk-agent // shared with most containers
 checkmk_agent_hash: 92cf5b6bac7a33c7

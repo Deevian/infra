@@ -70,6 +70,31 @@ drone.{{ domain_deev }} {
     reverse_proxy {{ hosts.lounge.ip }}:80
 }
 
+nextcloud.{{ domain_deev }} {
+    log {
+        output file /var/log/caddy/nextcloud.access.log
+    }
+
+    reverse_proxy {{ hosts.nextcloud.ip }}:80
+}
+
+paperless.{{ domain_deev }} {
+    log {
+        output file /var/log/caddy/paperless.access.log
+    }
+
+    reverse_proxy {{ hosts.lounge.ip }}:8000
+}
+
+mealie.{{ domain_deev }} {
+    log {
+        output file /var/log/caddy/mealie.access.log
+    }
+
+    reverse_proxy {{ hosts.lounge.ip }}:9925
+}
+
+
 {{ domain_deev }} {
     file_server
     root * /mnt/www-data/lounge/deev.io

@@ -1,0 +1,13 @@
+---
+
+- name: configure main cron
+  ansible.builtin.cron:
+    name: "nextcloud background jobs"
+    minute: "*/5"
+    job: "docker exec -u www-data nextcloud php -f /var/www/html/cron.php"
+
+- name: configure preview cron
+  ansible.builtin.cron:
+    name: "nextcloud preview images"
+    minute: "*/10"
+    job: "docker exec -u www-data nextcloud php occ preview:pre-generate"

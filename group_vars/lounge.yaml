@@ -8,9 +8,6 @@ package_list:
   - gpg
   - python3-pip
 
-## deev-checkmk-agent
-checkmk_agent_hash: afb596b83bfbad40
-
 ## ironicbadger.docker_compose_generator
 appdata_path: /mnt/appdata
 wwwdata_path: /mnt/www-data
@@ -73,7 +70,7 @@ containers:
     image: mariadb:10.11
     command: "--max-allowed-packet=64MB"
     volumes:
-      - /mnt/appdata/matomo/db:/var/lib/mysql:Z
+      - "{{ appdata_path }}/matomo/db:/var/lib/mysql:Z"
     include_global_env_vars: true
     restart: unless-stopped
     environment:
@@ -94,8 +91,8 @@ containers:
     active: true
     image: matomo:fpm-alpine
     volumes:
-      - /mnt/appdata/matomo/config:/var/www/html/config:z
-      - /mnt/appdata/matomo/www-data:/var/www/html:z
+      - "{{ appdata_path }}/matomo/config:/var/www/html/config:z"
+      - "{{ appdata_path }}/matomo/www-data:/var/www/html:z"
     include_global_env_vars: true
     restart: unless-stopped
     environment:
@@ -116,9 +113,63 @@ containers:
     active: true
     image: nginx:alpine
     volumes:
-      - /mnt/appdata/matomo/www-data:/var/www/html:z,ro
-      - /mnt/appdata/matomo/matomo.conf:/etc/nginx/conf.d/default.conf:z,ro
+      - "{{ appdata_path }}/matomo/www-data:/var/www/html:z,ro"
+      - "{{ appdata_path }}/matomo/matomo.conf:/etc/nginx/conf.d/default.conf:z,ro"
     include_global_env_vars: true
     restart: unless-stopped
     ports:
       - 8080:80
+
+  - service_name: paperless-redis
+    active: true
+    image: docker.io/library/redis:7
+    volumes:
+      - "{{ appdata_path }}/paperless-redis:/data"
+    include_global_env_vars: true
+    restart: unless-stopped
+
+  - service_name: paperless
+    active: true
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    depends_on:
+      - paperless-redis
+    volumes:
+      - "{{ appdata_path }}/paperless/data:/usr/src/paperless/data"
+      - "{{ appdata_path }}/paperless/media:/usr/src/paperless/media"
+      - "{{ appdata_path }}/paperless/export:/usr/src/paperless/export"
+      - "{{ appdata_path }}/paperless/consume:/usr/src/paperless/consume"
+    include_global_env_vars: true
+    restart: unless-stopped
+    environment:
+      - "PAPERLESS_REDIS=redis://paperless-redis:6379"
+      - "PAPERLESS_URL=https://paperless.{{ domain_deev }}"
+      - "PAPERLESS_SECRET_KEY={{ paperless_secret }}"
+      - "PAPERLESS_OCR_LANGUAGES=en por"
+      - "PAPERLESS_TIME_ZONE={{ ntp_timezone }}"
+    ports:
+      - 8000:8000
+
+  - service_name: mealie-frontend
+    active: true
+    image: hkotel/mealie:frontend-nightly
+    volumes:
+      - "{{ appdata_path }}/mealie:/app/data"
+    include_global_env_vars: true
+    restart: unless-stopped
+    environment:
+      - "API_URL=http://mealie-api:9000"
+    ports:
+      - 9925:9000
+
+  - service_name: mealie-api
+    active: true
+    image: hkotel/mealie:api-nightly
+    volumes:
+      - "{{ appdata_path }}/mealie:/app/data"
+    include_global_env_vars: true
+    restart: unless-stopped
+    environment:
+      - "ALLOW_SIGNUP=false"
+      - "MAX_WORKERS=1"
+      - "WEB_CONCURRENCY=1"
+      - "BASE_URL=https://mealie.{{ domain_deev }}"

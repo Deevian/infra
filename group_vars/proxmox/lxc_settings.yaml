@@ -25,7 +25,7 @@ lxc_list:
       }
     diskGB: 1
     unprivileged: true
-    nameserver: 1.1.1.1
+    nameserver: "{{ nextdns_ipv4 }}"
 
   tailscale:
     hostname: "{{ hosts.tailscale.hostname }}"
@@ -54,7 +54,7 @@ lxc_list:
         "mp2":"/mnt/appdata/crowdsec-etc,mp=/etc/crowdsec",
         "mp3":"/mnt/appdata/crowdsec-var,mp=/var/lib/crowdsec",
       }
-    diskGB: 2.5
+    diskGB: 3
     unprivileged: true
 
   samba:
@@ -84,7 +84,7 @@ lxc_list:
         "mp2":"/mnt/downloads/,mp=/mnt/downloads/",
         "mp3":"/dev/zvol/rpool/docker,mp=/var/lib/docker/,backup=0"
       }
-    diskGB: 2
+    diskGB: 3
     features: "nesting=1"
     unprivileged: true
     extra_config:

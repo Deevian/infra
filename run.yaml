@@ -78,6 +78,7 @@
     - role: geerlingguy.docker
     - role: deev-docker-compose
       tags: compose
+    - role: deev-nextcloud  
     - role: deev-checkmk-agent
   tasks:
     - name: install python docker for checkmk

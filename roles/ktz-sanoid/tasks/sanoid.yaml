@@ -42,7 +42,7 @@
     dest: /etc/sanoid/sanoid.defaults.conf
     state: link
   become: true
-  failed_when:
+  ignore_errors: true
 
 - name: Install executables
   file:
@@ -55,4 +55,4 @@
     - findoid
     - sleepymutex
   become: true
-  failed_when:
+  ignore_errors: true

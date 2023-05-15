@@ -19,7 +19,7 @@ downloads_path: /mnt/downloads
 containers:
   - service_name: plex
     active: true
-    image: lscr.io/linuxserver/plex:latest
+    image: linuxserver/plex:latest
     network_mode: host
     devices:
       - /dev/dri:/dev/dri
@@ -57,7 +57,7 @@ containers:
 
   - service_name: deluge
     active: true
-    image: lscr.io/linuxserver/deluge:latest
+    image: linuxserver/deluge:latest
     network_mode: host
     volumes:
       - "{{ appdata_path }}/deluge:/config"
@@ -68,7 +68,7 @@ containers:
 
   - service_name: prowlarr
     active: true
-    image: lscr.io/linuxserver/prowlarr:develop
+    image: linuxserver/prowlarr:develop
     network_mode: host
     volumes:
       - "{{ appdata_path }}/prowlarr:/config"
@@ -77,7 +77,7 @@ containers:
 
   - service_name: radarr
     active: true
-    image: lscr.io/linuxserver/radarr:develop
+    image: linuxserver/radarr:develop
     network_mode: host
     volumes:
       - "{{ appdata_path }}/radarr:/config"
@@ -87,7 +87,7 @@ containers:
 
   - service_name: sonarr
     active: true
-    image: lscr.io/linuxserver/sonarr:develop
+    image: linuxserver/sonarr:develop
     network_mode: host
     volumes:
       - "{{ appdata_path }}/sonarr:/config"
@@ -97,7 +97,7 @@ containers:
 
   - service_name: overseerr
     active: true
-    image: lscr.io/linuxserver/overseerr:develop
+    image: linuxserver/overseerr:develop
     network_mode: host
     volumes:
       - "{{ appdata_path }}/overseerr:/config"
@@ -106,7 +106,7 @@ containers:
 
   - service_name: bazarr
     active: true
-    image: lscr.io/linuxserver/bazarr:latest
+    image: linuxserver/bazarr:latest
     network_mode: host
     volumes:
       - "{{ appdata_path }}/bazarr:/config"
@@ -116,7 +116,7 @@ containers:
 
   - service_name: tautulli
     active: true
-    image: lscr.io/linuxserver/tautulli:latest
+    image: linuxserver/tautulli:latest
     network_mode: host
     volumes:
       - "{{ appdata_path }}/tautulli:/config"
@@ -137,7 +137,7 @@ containers:
 
   - service_name: sabnzbd
     active: true
-    image: lscr.io/linuxserver/sabnzbd:latest
+    image: linuxserver/sabnzbd:latest
     network_mode: host
     volumes:
       - "{{ appdata_path }}/init-files/sabnzbd:/custom-cont-init.d:ro"
