@@ -130,6 +130,6 @@ lxc_list:
         "mp1":"/mnt/appdata/www-data/lounge/,mp=/mnt/www-data/",
         "mp2":"/dev/zvol/rpool/docker-lounge,mp=/var/lib/docker/,backup=0"
       }
-    diskGB: 2
+    diskGB: 20
     features: "nesting=1"
     unprivileged: true

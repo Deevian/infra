@@ -159,7 +159,7 @@ containers:
     environment:
       - "API_URL=http://mealie-api:9000"
     ports:
-      - 9925:9000
+      - 9925:3001
 
   - service_name: mealie-api
     active: true
@@ -173,3 +173,24 @@ containers:
       - "MAX_WORKERS=1"
       - "WEB_CONCURRENCY=1"
       - "BASE_URL=https://mealie.{{ domain_deev }}"
+      - "PUID=1000"
+      - "PGID=1000"
+
+  - service_name: vrising
+    active: true
+    image: fboulanger/docker-vrising:latest
+    volumes:
+      - "{{ appdata_path }}/vrising/server:/mnt/vrising/server:rw"
+      - "{{ appdata_path }}/vrising/data:/mnt/vrising/persistentdata:rw"
+    include_global_env_vars: true
+    restart: unless-stopped
+    environment:
+      - "SERVERNAME=Lounge"
+      - "WORLDNAME=lounge"
+      - "GAMEPORT=27015"
+      - "QUERYPORT=27016"
+    ports:
+      - 9876:9876/udp
+      - 9877:9877/udp
+      - 27015:27015/udp
+      - 27016:27016/udp
