@@ -177,7 +177,7 @@ containers:
       - "PGID=1000"
 
   - service_name: vrising
-    active: true
+    active: false
     image: fboulanger/docker-vrising:latest
     volumes:
       - "{{ appdata_path }}/vrising/server:/mnt/vrising/server:rw"
@@ -194,3 +194,69 @@ containers:
       - 9877:9877/udp
       - 27015:27015/udp
       - 27016:27016/udp
+
+  - service_name: lemmy
+    active: true
+    image: dessalines/lemmy:0.18
+    volumes:
+      - "{{ appdata_path }}/lemmy/lemmy.hjson:/config/config.hjson:Z"
+    include_global_env_vars: true
+    restart: unless-stopped
+    depends_on:
+      - lemmy-postgres
+      - lemmy-pictrs
+    environment:
+      - "RUST_LOG=warn"
+    ports:
+      - 8536:8536
+
+  - service_name: lemmy-ui
+    active: true
+    image: dessalines/lemmy-ui:0.18
+    volumes:
+      - "{{ appdata_path }}/lemmy/extra_themes:/app/extra_themes"
+    include_global_env_vars: true
+    restart: unless-stopped
+    depends_on:
+      - lemmy
+    environment:
+      - "LEMMY_UI_LEMMY_INTERNAL_HOST=lemmy:8536"
+      - "LEMMY_UI_LEMMY_EXTERNAL_HOST=lemmy.{{ domain_deev }}"
+      - "LEMMY_HTTPS=true"
+    ports:
+      - 1234:1234
+
+  - service_name: lemmy-pictrs
+    active: true
+    image: asonix/pictrs:0.4.0-beta.19
+    volumes:
+      - "{{ appdata_path }}/lemmy/pictrs:/mnt:Z"
+    include_global_env_vars: true
+    restart: unless-stopped
+    user: 991:991
+    environment:
+      - "PICTRS__API_KEY={{ lemmy_pictrs_api_key }}"
+      - "RUST_LOG=debug"
+      - "RUST_BACKTRACE=full"
+      - "PICTRS__MEDIA__VIDEO_CODEC=vp9"
+      - "PICTRS__MEDIA__GIF__MAX_WIDTH=256"
+      - "PICTRS__MEDIA__GIF__MAX_HEIGHT=256"
+      - "PICTRS__MEDIA__GIF__MAX_AREA=65536"
+      - "PICTRS__MEDIA__GIF__MAX_FRAME_COUNT=400"
+    deploy:
+      resources:
+        limits:
+          memory: 690m
+
+  - service_name: lemmy-postgres
+    active: true
+    image: postgres:15-alpine
+    volumes:
+      - "{{ appdata_path }}/lemmy/postgres:/var/lib/postgresql/data:Z"
+      - "{{ appdata_path }}/lemmy/customPostgresql.conf:/etc/postgresql.conf"
+    include_global_env_vars: true
+    restart: unless-stopped
+    environment:
+      - "POSTGRES_USER=lemmy"
+      - "POSTGRES_PASSWORD={{ lemmy_postgres_password }}"
+      - "POSTGRES_DB=lemmy"

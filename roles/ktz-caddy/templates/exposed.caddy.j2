@@ -94,6 +94,52 @@ mealie.{{ domain_deev }} {
     reverse_proxy {{ hosts.lounge.ip }}:9925
 }
 
+lemmy.{{ domain_deev }} {
+    encode gzip
+    header {
+        -Server
+        Strict-Transport-Security "max-age=31536000; include-subdomains;"
+        X-XSS-Protection "1; mode=block"
+        X-Frame-Options "DENY"
+        X-Content-Type-Options nosniff
+        Referrer-Policy  no-referrer-when-downgrade
+        X-Robots-Tag "none"
+    }
+
+    log {
+        output file /var/log/caddy/lemmy.access.log
+    }
+
+    reverse_proxy {{ hosts.lounge.ip }}:1234
+
+    @lemmy {
+            path    /api/*
+            path    /pictrs/*
+            path    /feeds/*
+            path    /nodeinfo/*
+            path    /.well-known/*
+    }
+
+    @lemmy-hdr {
+            header Accept application/*
+    }
+
+    handle @lemmy {
+            reverse_proxy {{ hosts.lounge.ip }}:8536
+    }
+
+    handle @lemmy-hdr {
+            reverse_proxy {{ hosts.lounge.ip }}:8536
+    }
+
+    @lemmy-post {
+            method POST
+    }
+
+    handle @lemmy-post {
+            reverse_proxy {{ hosts.lounge.ip }}:8536
+    }
+}
 
 {{ domain_deev }} {
     file_server
