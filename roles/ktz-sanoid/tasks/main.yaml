@@ -1,7 +1,7 @@
 ---
 
 - name: sanoid setup
-  include: sanoid.yaml
+  include_tasks: sanoid.yaml
   tags:
     - sanoid
   when: sanoid_build_from_source

@@ -27,6 +27,13 @@ containers:
       - "database__useNullAsDefault=true"
       - "database__debug=false"
       - "url=https://ghost.lounge.{{ default_domain }}"
+      - "mail__from={{ ghost_mail_from }}"
+      - "mail__transport=SMTP"
+      - "mail__options__host=smtp.resend.com"
+      - "mail__options__port=465"
+      - "mail__options__auth__user=resend"
+      - "mail__options__auth__pass={{ ghost_mail_api_key }}"
+      - "mail__options__secure_connection=false"
 
   - service_name: drone-server
     active: true
@@ -121,7 +128,7 @@ containers:
       - 8080:80
 
   - service_name: paperless-redis
-    active: true
+    active: false
     image: docker.io/library/redis:7
     volumes:
       - "{{ appdata_path }}/paperless-redis:/data"
@@ -129,7 +136,7 @@ containers:
     restart: unless-stopped
 
   - service_name: paperless
-    active: true
+    active: false
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
     depends_on:
       - paperless-redis
@@ -150,7 +157,7 @@ containers:
       - 8000:8000
 
   - service_name: mealie-frontend
-    active: true
+    active: false
     image: hkotel/mealie:frontend-nightly
     volumes:
       - "{{ appdata_path }}/mealie:/app/data"
@@ -162,7 +169,7 @@ containers:
       - 9925:3001
 
   - service_name: mealie-api
-    active: true
+    active: false
     image: hkotel/mealie:api-nightly
     volumes:
       - "{{ appdata_path }}/mealie:/app/data"
@@ -178,15 +185,15 @@ containers:
 
   - service_name: vrising
     active: false
-    image: fboulanger/docker-vrising:latest
+    image: trueosiris/vrising
     volumes:
       - "{{ appdata_path }}/vrising/server:/mnt/vrising/server:rw"
       - "{{ appdata_path }}/vrising/data:/mnt/vrising/persistentdata:rw"
     include_global_env_vars: true
     restart: unless-stopped
     environment:
-      - "SERVERNAME=Lounge"
-      - "WORLDNAME=lounge"
+      - "SERVERNAME=Cafezinho"
+      - "WORLDNAME=cafezinho"
       - "GAMEPORT=27015"
       - "QUERYPORT=27016"
     ports:
@@ -195,68 +202,52 @@ containers:
       - 27015:27015/udp
       - 27016:27016/udp
 
-  - service_name: lemmy
-    active: true
-    image: dessalines/lemmy:0.18
+  - service_name: minecraft
+    active: false
+    image: itzg/minecraft-server
+    tty: true
+    stdin_open: true
     volumes:
-      - "{{ appdata_path }}/lemmy/lemmy.hjson:/config/config.hjson:Z"
+      - "{{ appdata_path }}/minecraft:/data"
     include_global_env_vars: true
     restart: unless-stopped
-    depends_on:
-      - lemmy-postgres
-      - lemmy-pictrs
-    environment:
-      - "RUST_LOG=warn"
     ports:
-      - 8536:8536
+      - 25565:25565/udp
+      - 25565:25565/tcp
+      - 8100:8100/tcp
+    environment:
+      - "EULA=TRUE"
+      - "TYPE=PURPUR"
+      - "VERSION=1.21.1"
+      - "VIEW_DISTANCE=10"
+      - "SIMULATION_DISTANCE=10"
+      - "SERVER_NAME=Lounge"
+      - "OPS=Deevian"
+      - "WHITELIST=Deevian,I_Dauntless_I"
+      - "ENABLE_AUTOPAUSE=true"
+      - "MAX_TICK_TIME=-1"
+      - "MOTD=Is this a minecraft server?"
+      - "ICON=https://cdn.discordapp.com/app-icons/668111785580036113/7bebe98df8bed07e83efe5dbd2380460.png"
+      - "OVERRIDE_ICON=TRUE"
+      - "JVM_OPTS=-Xms4G -Xmx4G -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true -Ddisable.watchdog=true"
 
-  - service_name: lemmy-ui
+  - service_name: runescape-dragonwilds
     active: true
-    image: dessalines/lemmy-ui:0.18
+    image: indifferentbroccoli/runescape-dragonwilds-server-docker
     volumes:
-      - "{{ appdata_path }}/lemmy/extra_themes:/app/extra_themes"
+      - "{{ appdata_path }}/dragonwilds:/home/steam/server-files"
     include_global_env_vars: true
     restart: unless-stopped
-    depends_on:
-      - lemmy
-    environment:
-      - "LEMMY_UI_LEMMY_INTERNAL_HOST=lemmy:8536"
-      - "LEMMY_UI_LEMMY_EXTERNAL_HOST=lemmy.{{ domain_deev }}"
-      - "LEMMY_HTTPS=true"
     ports:
-      - 1234:1234
-
-  - service_name: lemmy-pictrs
-    active: true
-    image: asonix/pictrs:0.4.0-beta.19
-    volumes:
-      - "{{ appdata_path }}/lemmy/pictrs:/mnt:Z"
-    include_global_env_vars: true
-    restart: unless-stopped
-    user: 991:991
+      - 7777:7777/udp
     environment:
-      - "PICTRS__API_KEY={{ lemmy_pictrs_api_key }}"
-      - "RUST_LOG=debug"
-      - "RUST_BACKTRACE=full"
-      - "PICTRS__MEDIA__VIDEO_CODEC=vp9"
-      - "PICTRS__MEDIA__GIF__MAX_WIDTH=256"
-      - "PICTRS__MEDIA__GIF__MAX_HEIGHT=256"
-      - "PICTRS__MEDIA__GIF__MAX_AREA=65536"
-      - "PICTRS__MEDIA__GIF__MAX_FRAME_COUNT=400"
-    deploy:
-      resources:
-        limits:
-          memory: 690m
-
-  - service_name: lemmy-postgres
-    active: true
-    image: postgres:15-alpine
-    volumes:
-      - "{{ appdata_path }}/lemmy/postgres:/var/lib/postgresql/data:Z"
-      - "{{ appdata_path }}/lemmy/customPostgresql.conf:/etc/postgresql.conf"
-    include_global_env_vars: true
-    restart: unless-stopped
-    environment:
-      - "POSTGRES_USER=lemmy"
-      - "POSTGRES_PASSWORD={{ lemmy_postgres_password }}"
-      - "POSTGRES_DB=lemmy"
+      - "PUID=1000"
+      - "PGID=1000"
+      - "UPDATE_ON_START=true"
+      - "OWNER_ID=0002a11fbcde43e5979790bf861e5129"
+      - "SERVER_NAME=Macarena"
+      - "DEFAULT_WORLD_NAME=Sonder"
+      - "ADMIN_PASSWORD=macarenamacarena"
+      - "WORLD_PASSWORD=macarena"
+      - "DEFAULT_PORT=7777"
+      - "MAX_PLAYERS=6"

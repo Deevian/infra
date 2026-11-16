@@ -6,4 +6,4 @@
 
 - name: spin up services
   ansible.builtin.shell:
-    cmd: "cd {{ docker_compose_generator_output_path }} && docker-compose up -d"
+    cmd: "cd {{ docker_compose_generator_output_path }} && docker compose up -d"

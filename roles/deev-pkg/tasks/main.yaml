@@ -4,10 +4,10 @@
   ansible.builtin.apt:
     pkg: "{{ package_list }}"
     state: present
+    update_cache: yes
 
 - name: upgrade packages
   ansible.builtin.apt:
     state: present
     upgrade: true
-    update_cache: true
   tags: update-packages

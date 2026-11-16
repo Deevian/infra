@@ -15,8 +15,8 @@ data_path: /mnt/data
 containers:
   - service_name: mariadb
     active: true
-    image: mariadb:latest
-    command: "--transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW"
+    image: mariadb:10.11
+    command: "--transaction-isolation=READ-COMMITTED"
     volumes:
       - "{{ appdata_path }}/db:/var/lib/mysql:Z"
     include_global_env_vars: true
@@ -38,6 +38,8 @@ containers:
   - service_name: nextcloud
     active: true
     image: nextcloud:fpm
+    devices:
+      - /dev/dri:/dev/dri
     volumes:
       - "{{ appdata_path }}/nextcloud:/var/www/html:z"
       - "{{ data_path }}/:/data"
@@ -65,3 +67,17 @@ containers:
       - nextcloud
     ports:
       - 80:80
+
+  - service_name: cron
+    active: true
+    image: nextcloud:fpm
+    include_global_env_vars: true
+    restart: unless-stopped
+    volumes:
+      - "{{ appdata_path }}/nextcloud:/var/www/html:z"
+      - "{{ data_path }}/:/data"
+      - "{{ appdata_path }}/nginx.conf:/etc/nginx/nginx.conf:z,ro"
+    entrypoint: /cron.sh
+    depends_on:
+      - mariadb
+      - redis

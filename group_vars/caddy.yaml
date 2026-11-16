@@ -5,9 +5,10 @@ hostname_caddy: "{{ hostname }}"
 
 ## deev-pkg
 package_list:
-  - golang
   - curl
+  - gnupg
+  - gnupg1
+  - gnupg2
 
 ## ktz-caddy
 caddy_data_path: /mnt/appdata
-crowdsec: true

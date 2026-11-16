@@ -57,3 +57,6 @@ mkdir /tmp/zvol_tmp
 mount /dev/zvol/rpool/docker_lxc /tmp/zvol_tmp
 chown -R lxc:lxc /tmp/zvol_tmp
 umount /tmp/zvol_tmp
+
+deluser lxc
+groupdel render

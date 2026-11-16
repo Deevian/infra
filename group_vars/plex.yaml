@@ -4,7 +4,7 @@ hostname: "{{ hosts.plex.hostname }}"
 hostname_plex: "{{ hostname }}"
 
 # deev-checkmk-agent
-checkmk_agent_hash: afb596b83bfbad40
+checkmk_agent_hash: cd4c2fe3368d9296
 
 # deev-pkg
 package_list:

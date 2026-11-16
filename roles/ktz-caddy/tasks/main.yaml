@@ -4,11 +4,6 @@
   hostname:
     name: "{{ hostname_caddy }}"
 
-- name: install crowdsec
-  import_tasks:
-    file: crowdsec.yaml
-  when: crowdsec
-
 - name: install caddy
   import_tasks:
     file: install.yaml

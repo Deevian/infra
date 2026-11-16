@@ -13,6 +13,22 @@
     - role: ironicbadger.snapraid
     - role: deev-checkmk-agent
 
+- hosts: dnsmasq
+  vars_files:
+    - 'vars/vault.yaml'
+  roles:
+    - role: deev-pkg
+    - role: deev-dhcp
+    - role: deev-checkmk-agent
+
+- hosts: tailscale
+  vars_files:
+    - 'vars/vault.yaml'
+  roles:
+    - role: deev-pkg
+    - role: deev-tailscale
+    - role: deev-checkmk-agent
+
 - hosts: caddy
   vars_files:
     - 'vars/vault.yaml'
@@ -29,14 +45,6 @@
     - role: vladgh.samba.server
     - role: deev-checkmk-agent
 
-- hosts: tailscale
-  vars_files:
-    - 'vars/vault.yaml'
-  roles:
-    - role: deev-pkg
-    - role: deev-tailscale
-    - role: deev-checkmk-agent
-
 - hosts: plex
   vars_files:
     - 'vars/vault.yaml'
@@ -47,20 +55,17 @@
       tags: compose
     - role: deev-checkmk-agent
   tasks:
+    - name: ignore pep 668
+      tags: checkmkagent
+      ansible.builtin.file:
+        path: /usr/lib/python3.12/EXTERNALLY-MANAGED
+        state: absent
     - name: install python docker for checkmk
       tags: checkmkagent
       ansible.builtin.pip:
         name:
           - docker
           - python-docker
-
-- hosts: dnsmasq
-  vars_files:
-    - 'vars/vault.yaml'
-  roles:
-    - role: deev-pkg
-    - role: deev-dhcp
-    - role: deev-checkmk-agent
 
 - hosts: checkmk
   vars_files:
@@ -81,6 +86,11 @@
     - role: deev-nextcloud  
     - role: deev-checkmk-agent
   tasks:
+    - name: ignore pep 668
+      tags: checkmkagent
+      ansible.builtin.file:
+        path: /usr/lib/python3.12/EXTERNALLY-MANAGED
+        state: absent
     - name: install python docker for checkmk
       tags: checkmkagent
       ansible.builtin.pip:
@@ -98,6 +108,11 @@
       tags: compose
     - role: deev-checkmk-agent
   tasks:
+    - name: ignore pep 668 because
+      tags: checkmkagent
+      ansible.builtin.file:
+        path: /usr/lib/python3.12/EXTERNALLY-MANAGED
+        state: absent
     - name: install python docker for checkmk
       tags: checkmkagent
       ansible.builtin.pip:

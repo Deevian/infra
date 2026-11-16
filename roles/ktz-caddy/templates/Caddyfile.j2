@@ -6,10 +6,6 @@
 
 	acme_dns cloudflare {{ cloudflare_auth_token }}
 
-	crowdsec {
-		api_key {{ crowdsec_api_key }}
-	}
-
 	servers {
 		trusted_proxies cloudflare
 	}

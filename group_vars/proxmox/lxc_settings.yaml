@@ -3,7 +3,7 @@
 ## deev-lxc
 lxc_api_node: "{{ hostname_proxmox }}"
 lxc_api_host: "{{ hosts.proxmox.ip }}"
-lxc_default_os_template: "local:vztmpl/ubuntu-22.04-standard_22.04-1_amd64.tar.zst"
+lxc_default_os_template: "local:vztmpl/ubuntu-24.04-standard_24.04-2_amd64.tar.zst"
 lxc_default_storage: "local-zfs"
 lxc_default_network_gateway: "{{ hosts.gateway.ip }}"
 lxc_default_nameserver: "{{ hosts.dnsmasq.ip }}"
@@ -21,7 +21,7 @@ lxc_list:
     hwaddr: "{{ hosts.dnsmasq.mac }}"
     mounts: |-
       {
-        "mp0": "/mnt/appdata/dnsmasq,mp=/etc/dnsmasq"
+        "mp0": "/mnt/temp/appdata/dnsmasq,mp=/etc/dnsmasq"
       }
     diskGB: 1
     unprivileged: true
@@ -34,7 +34,7 @@ lxc_list:
     hwaddr: "{{ hosts.tailscale.mac }}"
     mounts: |-
       {
-        "mp0":"/mnt/appdata/tailscale/,mp=/var/lib/tailscale"
+        "mp0":"/mnt/temp/appdata/tailscale/,mp=/var/lib/tailscale"
       }
     diskGB: 1
     unprivileged: true
@@ -49,10 +49,8 @@ lxc_list:
     hwaddr: "{{ hosts.caddy.mac }}"
     mounts: |-
       {
-        "mp0":"/mnt/appdata/caddy,mp=/mnt/appdata/caddy",
-        "mp1":"/mnt/appdata/www-data/,mp=/mnt/www-data/",
-        "mp2":"/mnt/appdata/crowdsec-etc,mp=/etc/crowdsec",
-        "mp3":"/mnt/appdata/crowdsec-var,mp=/var/lib/crowdsec",
+        "mp0":"/mnt/temp/appdata/caddy,mp=/mnt/appdata/caddy",
+        "mp1":"/mnt/temp/appdata/www-data/,mp=/mnt/www-data/",
       }
     diskGB: 3
     unprivileged: true
@@ -65,8 +63,8 @@ lxc_list:
     mounts: |-
       {
         "mp0":"/mnt/media/,mp=/mnt/media/",
-        "mp1":"/mnt/downloads/,mp=/mnt/downloads/",
-        "mp2":"/mnt/appdata/,mp=/mnt/appdata/",
+        "mp1":"/mnt/temp/downloads/,mp=/mnt/downloads/",
+        "mp2":"/mnt/temp/appdata/,mp=/mnt/appdata/",
         "mp3":"/mnt/data/,mp=/mnt/data/"
       }
     diskGB: 1
@@ -80,9 +78,9 @@ lxc_list:
     mounts:
       {
         "mp0":"/mnt/media/,mp=/mnt/media/",
-        "mp1":"/mnt/appdata/plex/,mp=/mnt/appdata/",
-        "mp2":"/mnt/downloads/,mp=/mnt/downloads/",
-        "mp3":"/dev/zvol/rpool/docker,mp=/var/lib/docker/,backup=0"
+        "mp1":"/mnt/temp/appdata/plex/,mp=/mnt/appdata/",
+        "mp2":"/mnt/temp/downloads/,mp=/mnt/downloads/",
+        "mp3":"/mnt/temp/docker/plex/,mp=/var/lib/docker/,backup=0"
       }
     diskGB: 3
     features: "nesting=1"
@@ -99,7 +97,7 @@ lxc_list:
     hwaddr: "{{ hosts.checkmk.mac }}"
     mounts: |-
       {
-        "mp0":"/mnt/appdata/checkmk,mp=/backup"
+        "mp0":"/mnt/temp/appdata/checkmk,mp=/backup"
       }
     diskGB: 4
     unprivileged: true
@@ -111,13 +109,17 @@ lxc_list:
     hwaddr: "{{ hosts.nextcloud.mac }}"
     mounts: |-
       {
-        "mp0":"/mnt/appdata/nextcloud/,mp=/mnt/appdata/",
+        "mp0":"/mnt/temp/appdata/nextcloud/,mp=/mnt/appdata/",
         "mp1":"/mnt/data/,mp=/mnt/data/",
-        "mp2":"/dev/zvol/rpool/docker-nextcloud,mp=/var/lib/docker/,backup=0"
+        "mp2":"/mnt/temp/docker/nextcloud/,mp=/var/lib/docker/,backup=0"
       }
     diskGB: 2
     features: "nesting=1"
     unprivileged: true
+    extra_config:
+      - "lxc.cgroup.devices.allow: c 226:128 rwm"
+      - "lxc.cgroup2.devices.allow: c 226:128 rwm"
+      - "lxc.mount.entry: /dev/dri/renderD128 dev/dri/renderD128 none bind,optional,create=file 0 0"
 
   lounge:
     hostname: "{{ hosts.lounge.hostname }}"
@@ -126,9 +128,9 @@ lxc_list:
     hwaddr: "{{ hosts.lounge.mac }}"
     mounts: |-
       {
-        "mp0":"/mnt/appdata/lounge/,mp=/mnt/appdata/",
-        "mp1":"/mnt/appdata/www-data/lounge/,mp=/mnt/www-data/",
-        "mp2":"/dev/zvol/rpool/docker-lounge,mp=/var/lib/docker/,backup=0"
+        "mp0":"/mnt/temp/appdata/lounge/,mp=/mnt/appdata/",
+        "mp1":"/mnt/temp/appdata/www-data/lounge/,mp=/mnt/www-data/",
+        "mp2":"/mnt/temp/docker/lounge/,mp=/var/lib/docker/,backup=0"
       }
     diskGB: 20
     features: "nesting=1"

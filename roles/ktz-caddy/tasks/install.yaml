@@ -1,12 +1,22 @@
 ---
 
+- name: add gpo apt repo
+  ansible.builtin.apt_repository:
+    repo: 'ppa:longsleep/golang-backports'
+
+- name: install required packages
+  ansible.builtin.apt:
+    pkg: golang-go
+    state: present
+    update_cache: yes
+
 - name: install xcaddy
   ansible.builtin.apt:
     deb: "{{ xcaddy_binary_url }}"
 
 - name: build caddy
   ansible.builtin.shell:
-    cmd: xcaddy build latest --with github.com/caddy-dns/cloudflare --with github.com/WeidiDeng/caddy-cloudflare-ip --with github.com/hslatman/caddy-crowdsec-bouncer --output /usr/local/bin/caddy
+    cmd: xcaddy build latest --with github.com/caddy-dns/cloudflare --with github.com/WeidiDeng/caddy-cloudflare-ip --output /usr/local/bin/caddy
 
 - name: create caddy config folder
   ansible.builtin.file:

@@ -40,7 +40,7 @@ hosts:
   proxmox:    {mac: d8:bb:c1:dd:f3:cf, ip: 10.10.1.10,  hostname: proxmox}
   dnsmasq:    {mac: 22:36:5f:87:03:9a, ip: 10.10.1.11,  hostname: dnsmasq, ip6: "{{ dnsmasq_ipv6 }}"}
   tailscale:  {mac: da:07:5f:33:dc:74, ip: 10.10.1.12,  hostname: tailscale}
-  caddy:      {mac: f6:a2:69:61:94:8d, ip: 10.10.1.100, hostname: caddy}
+  caddy:      {mac: f6:a2:69:61:94:8d, ip: 10.10.1.13, hostname: caddy}
   samba:      {mac: e6:30:34:33:36:89, ip: 10.10.1.101, hostname: samba}
   plex:       {mac: 3e:22:bd:64:39:9e, ip: 10.10.1.102, hostname: plex}
   checkmk:    {mac: 26:fa:d5:b9:1a:b0, ip: 10.10.1.103, hostname: checkmk}
@@ -54,7 +54,7 @@ checkmk_server_site: home
 checkmk_server_host: "{{ hosts.checkmk.ip }}"
 
 ## deev-checkmk-agent // shared with most containers
-checkmk_agent_hash: 92cf5b6bac7a33c7
+checkmk_agent_hash: a62ac65a0086a925
 
 ## geerlingguy.docker // log rotation
 docker_daemon_options:

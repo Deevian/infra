@@ -22,6 +22,14 @@ jellyfin.{{ domain }} {
     reverse_proxy {{ hosts.plex.ip }}:8096
 }
 
+jstream.{{ domain }} {
+    log {
+        output file /var/log/caddy/plex.access.log
+    }
+
+    reverse_proxy {{ hosts.plex.ip }}:8096
+}
+
 overseerr.{{ domain }} {
     log {
         output file /var/log/caddy/overserr.access.log
@@ -149,4 +157,12 @@ lemmy.{{ domain_deev }} {
     log {
         output file /var/log/caddy/deev.access.log
     }
+}
+
+map.{{ domain_deev }} {
+    log {
+        output file /var/log/caddy/map.access.log
+    }
+
+    reverse_proxy {{ hosts.lounge.ip }}:8100
 }
