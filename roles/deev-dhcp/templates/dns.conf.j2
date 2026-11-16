@@ -17,12 +17,6 @@ no-resolv
 # Don't poll changes from external files (like /etc/resolv.conf)
 no-poll
 
-# Never forward plain names (without a dot or domain part)
-domain-needed
-
-# Never forward addresses in the non-routed address spaces.
-bogus-priv
-
 # Upstream DNS servers
 server={{ nextdns_ipv6_1 }}
 server={{ nextdns_ipv4_1 }}
@@ -37,10 +31,10 @@ strict-order
 dhcp-range=10.10.1.110,10.10.1.250,24h
 
 # IPv4 DNS server
-dhcp-option=option:dns-server,10.10.1.11
+dhcp-option=option:dns-server,{{ hosts.dnsmasq.ip }}
 
 # IPv4 gateway
-dhcp-option=option:router,10.10.1.254
+dhcp-option=option:router,{{ hosts.gateway.ip }}
 
 # Ask client to poll for option changes every six hours
 dhcp-option=option6:information-refresh-time,6h

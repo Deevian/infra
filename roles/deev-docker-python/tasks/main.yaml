@@ -1,0 +1,14 @@
+---
+# Installs the Docker SDK for the system python so the checkmk docker
+# plugin (and ansible docker modules) can talk to the docker daemon.
+
+- name: allow system-wide pip installs (PEP 668)
+  ansible.builtin.file:
+    path: "/usr/lib/python{{ ansible_python.version.major }}.{{ ansible_python.version.minor }}/EXTERNALLY-MANAGED"
+    state: absent
+  when: ansible_os_family == "Debian"
+
+- name: install docker python sdk
+  ansible.builtin.pip:
+    name: docker
+    state: present

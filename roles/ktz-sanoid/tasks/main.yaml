@@ -9,12 +9,11 @@
 - name: configure sanoid
   include_tasks: configure.yaml
 
-# todo remove this hack
-- name: ensure sanoid is installed
-  apt:
-    name: sanoid
+- name: install sanoid from apt
+  ansible.builtin.apt:
+    name: "{{ sanoid_apt_package_name }}"
     state: present
-  ignore_errors: true
+  when: not sanoid_build_from_source
 
 - name: replication setup
   include_tasks: replication.yaml
@@ -24,5 +23,6 @@
 - name: Give user passwordless access to ZFS commands
   lineinfile:
     path: /etc/sudoers
+    validate: "visudo -cf %s"
     line: "{{ main_username }} ALL=(ALL) NOPASSWD: /usr/sbin/zfs,/usr/sbin/zpool"
   become: true

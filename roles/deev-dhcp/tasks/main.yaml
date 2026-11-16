@@ -4,13 +4,11 @@
   hostname:
     name: "{{ hostname_dnsmasq }}"
 
-- name: disable systemd-resolve
-  ansible.builtin.shell:
-    cmd: "systemctl disable systemd-resolved.service"
-
-- name: stop systemd-resolve
-  ansible.builtin.shell:
-    cmd: "systemctl stop systemd-resolved"
+- name: disable and stop systemd-resolved
+  ansible.builtin.systemd:
+    name: systemd-resolved
+    enabled: false
+    state: stopped
 
 - name: check for duplicated items
   import_tasks: duplicate_checks.yaml
@@ -20,7 +18,9 @@
   import_tasks: template.yaml
   tags: config
 
-- name: restart dnsmasq
-  ansible.builtin.shell:
-    cmd: "systemctl restart dnsmasq"
+- name: ensure dnsmasq is enabled and running
+  ansible.builtin.systemd:
+    name: dnsmasq
+    enabled: true
+    state: started
   tags: config

@@ -1,29 +1,49 @@
 ---
 
-- name: install caddy service file
-  template:
-    src: templates/caddy.service.j2
-    dest: "/etc/systemd/system/caddy.service"
-
 - name: ensure Caddyfile target dir exists
   file:
     path: "{{ caddy_linux_caddyfile_path }}"
     state: directory
+    mode: "0755"
+
+- name: install caddy environment file (secrets)
+  copy:
+    content: "CLOUDFLARE_API_TOKEN={{ cloudflare_auth_token }}\n"
+    dest: "{{ caddy_linux_caddyfile_path }}/caddy.env"
+    owner: root
+    group: root
+    mode: "0600"
+  no_log: true
+  notify: restart caddy
+
+- name: install caddy service file
+  template:
+    src: templates/caddy.service.j2
+    dest: "/etc/systemd/system/caddy.service"
+    mode: "0644"
+  notify: restart caddy
 
 - name: template and install Caddyfile
   template:
     src: templates/Caddyfile.j2
     dest: "{{ caddy_linux_caddyfile_path }}/Caddyfile"
+    mode: "0644"
 
 - name: template and install exposed config
   template:
     src: templates/exposed.caddy.j2
     dest: "{{ caddy_linux_caddyfile_path }}/exposed.caddy"
+    mode: "0644"
 
 - name: template and install internal config
   template:
     src: templates/internal.caddy.j2
     dest: "{{ caddy_linux_caddyfile_path }}/internal.caddy"
+    mode: "0644"
+
+# a changed env file or unit needs a full restart, not just a reload
+- name: apply pending caddy restarts
+  meta: flush_handlers
 
 - name: enable caddy service
   ansible.builtin.systemd:

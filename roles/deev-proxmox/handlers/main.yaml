@@ -1,0 +1,7 @@
+---
+
+- name: apply udev rules
+  ansible.builtin.shell: |
+    udevadm control --reload-rules
+    udevadm trigger --subsystem-match=drm --action=change
+  changed_when: true

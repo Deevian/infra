@@ -15,8 +15,9 @@
     deb: "{{ xcaddy_binary_url }}"
 
 - name: build caddy
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: xcaddy build latest --with github.com/caddy-dns/cloudflare --with github.com/WeidiDeng/caddy-cloudflare-ip --output /usr/local/bin/caddy
+  changed_when: true  # always rebuilds the binary
 
 - name: create caddy config folder
   ansible.builtin.file:

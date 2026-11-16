@@ -3,3 +3,4 @@
 collections:
   - name: vladgh.samba
   - name: community.general
+  - name: ansible.posix

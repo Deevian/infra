@@ -45,7 +45,7 @@
     state: present
     onboot: true
     memory: "{{ item.value.memory | default(lxc_default_memory) }}"
-    cores: "{{ item.value.cres | default(lxc_default_cores) }}"
+    cores: "{{ item.value.cores | default(lxc_default_cores) }}"
   tags:
     - "{{ item.key }}"
     - create

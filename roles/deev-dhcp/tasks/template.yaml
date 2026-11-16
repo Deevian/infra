@@ -6,6 +6,7 @@
     state: directory
     owner: root
     group: root
+    mode: "0755"
   loop:
     - "{{ dnsmasq_config_dir }}"
 
@@ -13,6 +14,10 @@
   copy:
     content: "conf-dir={{ dnsmasq_config_dir }}"
     dest: /etc/dnsmasq.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: restart dnsmasq
 
 - name: write dns file
   template:
@@ -20,6 +25,8 @@
     dest: "{{ dnsmasq_config_dir }}/01-dns.conf"
     owner: root
     group: root
+    mode: "0644"
+  notify: restart dnsmasq
 
 - name: write static dhcp file
   template:
@@ -27,6 +34,8 @@
     dest: "{{ dnsmasq_config_dir }}/02-static-dhcp.conf"
     owner: root
     group: root
+    mode: "0644"
+  notify: restart dnsmasq
 
 - name: write dns overrides file
   template:
@@ -34,6 +43,8 @@
     dest: "{{ dnsmasq_config_dir }}/03-dns-overrides.conf"
     owner: root
     group: root
+    mode: "0644"
+  notify: restart dnsmasq
 
 - name: write resolv.conf
   template:
@@ -41,3 +52,10 @@
     dest: "/etc/resolv.conf"
     owner: root
     group: root
+    mode: "0644"
+  notify: restart dnsmasq
+
+# fail here, before the restart handler runs, if the config is broken
+- name: validate dnsmasq configuration
+  ansible.builtin.command: dnsmasq --test -C /etc/dnsmasq.conf
+  changed_when: false

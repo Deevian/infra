@@ -24,6 +24,7 @@ Type=notify
 User=root
 Group=root
 Environment="XDG_DATA_HOME={{ caddy_data_path }}"
+EnvironmentFile={{ caddy_linux_caddyfile_path }}/caddy.env
 ExecStart=/usr/local/bin/caddy run --environ --config /etc/caddy/Caddyfile
 ExecReload=/usr/local/bin/caddy reload --config /etc/caddy/Caddyfile --force
 TimeoutStopSec=5s

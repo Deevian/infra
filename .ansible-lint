@@ -1,0 +1,26 @@
+---
+exclude_paths:
+  - galaxy_roles/
+  - .idea/
+  - .claude/
+  - vars/vault.yaml
+
+# Style-only rules that would require touching nearly every task.
+# Remove entries from here to tighten things up gradually.
+skip_list:
+  - name[casing]
+  - name[play]
+  - role-name
+  - fqcn
+  - yaml[truthy]
+  - yaml[octal-values]
+  - yaml[line-length]
+  - jinja[spacing]
+  # Known and intentional, see inline comments in the code where relevant.
+  # `hosts` is used as the host-definition dict throughout group_vars
+  - var-naming[no-reserved]
+  - schema[vars]
+  # ignore_errors is deliberate on LXC stop/destroy and sanoid symlinks
+  - ignore-errors
+  # shell/command tasks that can't report meaningful change state
+  - no-changed-when

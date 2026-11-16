@@ -50,7 +50,7 @@ lxc_list:
     mounts: |-
       {
         "mp0":"/mnt/temp/appdata/caddy,mp=/mnt/appdata/caddy",
-        "mp1":"/mnt/temp/appdata/www-data/,mp=/mnt/www-data/",
+        "mp1":"/mnt/temp/appdata/www-data/,mp=/mnt/www-data/"
       }
     diskGB: 3
     unprivileged: true

@@ -1,3 +1,5 @@
+.PHONY: proxmox dnsmasq dnsmasq-config tailscale caddy caddy-config samba plex plex-compose checkmk nextcloud nextcloud-compose lounge lounge-compose checkmk-agents update-packages lxc-create lxc-start lxc-stop lxc-destroy reqs forcereqs lint decrypt encrypt gitinit
+
 ## PROXMOX
 proxmox:
 	ansible-playbook -b run.yaml --limit proxmox
@@ -87,6 +89,11 @@ reqs:
 forcereqs:
 	ansible-galaxy install -r requirements.yaml --force
 	ansible-galaxy collection install -r requirements-collections.yaml --force
+
+ANSIBLE_COLLECTIONS_PATH ?= /usr/lib/python3/dist-packages:$(HOME)/.ansible/collections
+
+lint:
+	ANSIBLE_COLLECTIONS_PATH=$(ANSIBLE_COLLECTIONS_PATH) ansible-lint
 
 decrypt:
 	ansible-vault decrypt vars/vault.yaml

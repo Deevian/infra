@@ -4,7 +4,7 @@
 		output file /var/log/caddy/default.access.log
 	}
 
-	acme_dns cloudflare {{ cloudflare_auth_token }}
+	acme_dns cloudflare {env.CLOUDFLARE_API_TOKEN}
 
 	servers {
 		trusted_proxies cloudflare

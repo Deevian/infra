@@ -2,6 +2,7 @@
 
 - name: download checkmk agent for host
   tags: checkmk-agent
+  no_log: true
   ansible.builtin.get_url:
     dest: "/tmp/agent.deb"
     mode: 0644

@@ -54,18 +54,8 @@
     - role: deev-docker-compose
       tags: compose
     - role: deev-checkmk-agent
-  tasks:
-    - name: ignore pep 668
-      tags: checkmkagent
-      ansible.builtin.file:
-        path: /usr/lib/python3.12/EXTERNALLY-MANAGED
-        state: absent
-    - name: install python docker for checkmk
-      tags: checkmkagent
-      ansible.builtin.pip:
-        name:
-          - docker
-          - python-docker
+    - role: deev-docker-python
+      tags: [checkmk-agent, checkmkagent]
 
 - hosts: checkmk
   vars_files:
@@ -83,20 +73,10 @@
     - role: geerlingguy.docker
     - role: deev-docker-compose
       tags: compose
-    - role: deev-nextcloud  
+    - role: deev-nextcloud
     - role: deev-checkmk-agent
-  tasks:
-    - name: ignore pep 668
-      tags: checkmkagent
-      ansible.builtin.file:
-        path: /usr/lib/python3.12/EXTERNALLY-MANAGED
-        state: absent
-    - name: install python docker for checkmk
-      tags: checkmkagent
-      ansible.builtin.pip:
-        name:
-          - docker
-          - python-docker
+    - role: deev-docker-python
+      tags: [checkmk-agent, checkmkagent]
 
 - hosts: lounge
   vars_files:
@@ -107,15 +87,5 @@
     - role: deev-docker-compose
       tags: compose
     - role: deev-checkmk-agent
-  tasks:
-    - name: ignore pep 668 because
-      tags: checkmkagent
-      ansible.builtin.file:
-        path: /usr/lib/python3.12/EXTERNALLY-MANAGED
-        state: absent
-    - name: install python docker for checkmk
-      tags: checkmkagent
-      ansible.builtin.pip:
-        name:
-          - docker
-          - python-docker
+    - role: deev-docker-python
+      tags: [checkmk-agent, checkmkagent]

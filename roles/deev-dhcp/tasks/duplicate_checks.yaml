@@ -24,13 +24,18 @@
           - dupe_check.reservation_count_total == dupe_check.reservation_hostname_unique
 
   rescue:
-    - name: dupe check
+    - name: report duplicated values
       debug:
-        msg: "Duplicate entry: {{ item | duplicates }}"
-      loop:
-        - "{{ dhcp_reservations | selectattr('mac', 'defined') | map(attribute='mac') }}"
-        - "{{ dhcp_reservations | selectattr('ip', 'defined') | map(attribute='ip') }}"
-        - "{{ dhcp_reservations | selectattr('hostname', 'defined') | map(attribute='hostname') }}"
+        msg: >-
+          Duplicate {{ item.key }}:
+          {{ item.value | community.general.counter | dict2items
+             | selectattr('value', 'gt', 1) | map(attribute='key') | list }}
+      loop: "{{ dupes | dict2items }}"
+      vars:
+        dupes:
+          mac: "{{ dhcp_reservations | selectattr('mac', 'defined') | map(attribute='mac') | list }}"
+          ip: "{{ dhcp_reservations | selectattr('ip', 'defined') | map(attribute='ip') | list }}"
+          hostname: "{{ dhcp_reservations | selectattr('hostname', 'defined') | map(attribute='hostname') | list }}"
 
     - name: Fail when errors
       ansible.builtin.fail:

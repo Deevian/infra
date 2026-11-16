@@ -15,8 +15,16 @@
     state: present
     gid: "{{ render_gid }}"
 
-- name: ensure render file has correct group
-  command: "chown -R root:render /dev/dri/renderD128"
+- name: ensure render device has correct group (udev rule)
+  ansible.builtin.copy:
+    content: |
+      # {{ ansible_managed }}
+      SUBSYSTEM=="drm", KERNEL=="renderD*", GROUP="render"
+    dest: /etc/udev/rules.d/99-render-group.rules
+    owner: root
+    group: root
+    mode: "0644"
+  notify: apply udev rules
 
 - name: add group "lxc" exists with correct gid
   ansible.builtin.group:
