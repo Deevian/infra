@@ -4,6 +4,13 @@
   ansible.builtin.import_role:
     name: ironicbadger.docker_compose_generator
 
+- name: write compose override file
+  ansible.builtin.copy:
+    content: "{{ docker_compose_override | to_nice_yaml(indent=2) }}"
+    dest: "{{ docker_compose_generator_output_path }}/docker-compose.override.yml"
+    mode: "0644"
+  when: docker_compose_override is defined
+
 - name: spin up services
   ansible.builtin.shell:
     cmd: "cd {{ docker_compose_generator_output_path }} && docker compose up -d"

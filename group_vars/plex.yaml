@@ -16,6 +16,12 @@ appdata_path: /mnt/appdata
 media_path: /mnt/media
 downloads_path: /mnt/downloads
 
+# options the compose generator doesn't support
+docker_compose_override:
+  services:
+    seerr:
+      init: true
+
 containers:
   - service_name: plex
     active: true
@@ -95,14 +101,21 @@ containers:
     include_global_env_vars: true
     restart: unless-stopped
 
-  - service_name: overseerr
+  - service_name: seerr
     active: true
-    image: linuxserver/overseerr:develop
+    image: ghcr.io/seerr-team/seerr:v3
     network_mode: host
     volumes:
-      - "{{ appdata_path }}/overseerr:/config"
+      # runs as uid 1000 and ignores PUID/PGID
+      - "{{ appdata_path }}/seerr:/app/config"
     include_global_env_vars: true
     restart: unless-stopped
+    healthcheck:
+      test: "wget --no-verbose --tries=1 --spider http://localhost:5055/api/v1/settings/public || exit 1"
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 20s
 
   - service_name: bazarr
     active: true
