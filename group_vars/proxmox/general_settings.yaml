@@ -13,7 +13,6 @@ package_list:
   - curl
   - wget
   - dnsutils
-  - hddtemp
   - htop
   - iftop
   - iotop
@@ -51,7 +50,7 @@ snapraid_config_excludes:
   - ".nfo"
 
 ## ktz-sanoid
-sanoid_build_from_source: true
+sanoid_build_from_source: false
 sanoid_config_source: sanoid-proxmox.conf
 syncoid_cron_jobs:
   - {job: "rsync -az /mnt/temp/appdata/* /mnt/backups/appdata && curl -fsS -m 10 --retry 5 -o /dev/null {{ snapraid_healthcheck_io_host }}/{{ rsync_healthcheck_io_uuid }} > /dev/null", name: "appdata backup", weekday: "*", hour: "6"}
@@ -117,13 +116,13 @@ fstab_mergerfs:
       source: "/mnt/media-disks/*:/mnt/data",
       mountpoint: "/mnt/storage",
       fs: fuse.mergerfs,
-      opts: "defaults,nonempty,allow_other,use_ino,moveonenospc=true,category.create=epmfs,dropcacheonclose=true,minfreespace=250G,fsname=mergerfs"
+      opts: "defaults,x-systemd.after=zfs-mount.service,x-systemd.requires-mounts-for=/mnt/media-disks/disk-1,x-systemd.requires-mounts-for=/mnt/media-disks/disk-2,x-systemd.requires-mounts-for=/mnt/media-disks/disk-3,nonempty,allow_other,use_ino,moveonenospc=true,category.create=epmfs,dropcacheonclose=true,minfreespace=250G,fsname=mergerfs"
     }
   - {
       source: "/mnt/media-disks/*",
       mountpoint: "/mnt/media",
       fs: fuse.mergerfs,
-      opts: "defaults,nonempty,allow_other,use_ino,moveonenospc=true,category.create=mfs,dropcacheonclose=true,minfreespace=250G,fsname=jbod"
+      opts: "defaults,x-systemd.requires-mounts-for=/mnt/media-disks/disk-1,x-systemd.requires-mounts-for=/mnt/media-disks/disk-2,x-systemd.requires-mounts-for=/mnt/media-disks/disk-3,nonempty,allow_other,use_ino,moveonenospc=true,category.create=mfs,dropcacheonclose=true,minfreespace=250G,fsname=jbod"
     }
 # yamllint enable rule:indentation
 

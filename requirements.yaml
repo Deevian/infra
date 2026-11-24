@@ -1,5 +1,4 @@
 - src: ironicbadger.figurine
-- src: ironicbadger.hddtemp
 - src: ironicbadger.snapraid
 - src: ironicbadger.proxmox_nag_removal
 - src: ironicbadger.docker_compose_generator

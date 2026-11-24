@@ -23,7 +23,7 @@ lxc_list:
       {
         "mp0": "/mnt/temp/appdata/dnsmasq,mp=/etc/dnsmasq"
       }
-    diskGB: 1
+    diskGB: 2
     unprivileged: true
     nameserver: "{{ nextdns_ipv4 }}"
 
@@ -36,7 +36,7 @@ lxc_list:
       {
         "mp0":"/mnt/temp/appdata/tailscale/,mp=/var/lib/tailscale"
       }
-    diskGB: 1
+    diskGB: 2
     unprivileged: true
     extra_config:
       - "lxc.cgroup2.devices.allow: c 10:200 rwm"
@@ -52,7 +52,7 @@ lxc_list:
         "mp0":"/mnt/temp/appdata/caddy,mp=/mnt/appdata/caddy",
         "mp1":"/mnt/temp/appdata/www-data/,mp=/mnt/www-data/"
       }
-    diskGB: 3
+    diskGB: 4
     unprivileged: true
 
   samba:
@@ -67,7 +67,7 @@ lxc_list:
         "mp2":"/mnt/temp/appdata/,mp=/mnt/appdata/",
         "mp3":"/mnt/data/,mp=/mnt/data/"
       }
-    diskGB: 1
+    diskGB: 2
     unprivileged: true
 
   plex:
@@ -82,11 +82,10 @@ lxc_list:
         "mp2":"/mnt/temp/downloads/,mp=/mnt/downloads/",
         "mp3":"/mnt/temp/docker/plex/,mp=/var/lib/docker/,backup=0"
       }
-    diskGB: 3
+    diskGB: 5
     features: "nesting=1"
     unprivileged: true
     extra_config:
-      - "lxc.cgroup.devices.allow: c 226:128 rwm"
       - "lxc.cgroup2.devices.allow: c 226:128 rwm"
       - "lxc.mount.entry: /dev/dri/renderD128 dev/dri/renderD128 none bind,optional,create=file 0 0"
 
@@ -113,11 +112,10 @@ lxc_list:
         "mp1":"/mnt/data/,mp=/mnt/data/",
         "mp2":"/mnt/temp/docker/nextcloud/,mp=/var/lib/docker/,backup=0"
       }
-    diskGB: 2
+    diskGB: 8
     features: "nesting=1"
     unprivileged: true
     extra_config:
-      - "lxc.cgroup.devices.allow: c 226:128 rwm"
       - "lxc.cgroup2.devices.allow: c 226:128 rwm"
       - "lxc.mount.entry: /dev/dri/renderD128 dev/dri/renderD128 none bind,optional,create=file 0 0"
 
